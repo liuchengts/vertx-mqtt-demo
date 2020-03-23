@@ -8,16 +8,18 @@ import com.pi.client.pi_client.utlis.GsonUtils;
 import com.pi.client.pi_client.utlis.ShellUtils;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServer;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class HttpHandle {
-  Vertx vertx = Vertx.vertx();
+  HttpServer httpServer;
 
   public void start() {
-    vertx.createHttpServer().requestHandler(req -> {
+    httpServer = Vertx.vertx().createHttpServer().requestHandler(req -> {
       req.response()
         .putHeader("content-type", "application/json")
         .end(GsonUtils.objectToJson(handle(req.params())));
@@ -42,8 +44,8 @@ public class HttpHandle {
       log.info("requestDTO:{}", requestDTO);
       if (RequestDTO.Type.WIFI == requestDTO.getType()) {
         configFlie(params.get(KeyConstant.SSID), params.get(KeyConstant.PWD));
-      } else if (RequestDTO.Type.CLONE == requestDTO.getType()) {
-
+      } else if (RequestDTO.Type.CLOSE == requestDTO.getType()) {
+        httpServer.close();
       } else {
         type = ResponseDTO.Type.OK;
         msg = "未知的请求类型";

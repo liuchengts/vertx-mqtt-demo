@@ -26,6 +26,6 @@ public class RequestDTO {
 
   public enum Type {
     //配置wifi、关闭当前程序
-    WIFI, CLONE;
+    WIFI, CLOSE;
   }
 }
