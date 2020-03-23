@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # !/bin/sh
 set -m
-SHELL_FOLDER=$(cd "$(dirname "$0")";pwd)
+SHELL_FOLDER="/root"
 AP_DIR=${SHELL_FOLDER}"/create_ap"
 function main() {
     ap_stop
