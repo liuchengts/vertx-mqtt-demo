@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class HttpHandle {
+public class HttpService {
   HttpServer httpServer;
 
   public void start() {

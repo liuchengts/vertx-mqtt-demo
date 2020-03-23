@@ -1,14 +1,20 @@
 package com.pi.client.pi_client;
 
-import com.pi.client.pi_client.handles.HttpHandle;
+import com.pi.client.pi_client.handles.HttpService;
 import io.vertx.core.AbstractVerticle;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PiApplication extends AbstractVerticle {
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     service();
   }
 
-  static void service() throws Exception {
-    new HttpHandle().start();
+  static void service() {
+    try {
+      new HttpService().start();
+    } catch (Exception e) {
+      log.error("HttpServer error", e);
+    }
   }
 }

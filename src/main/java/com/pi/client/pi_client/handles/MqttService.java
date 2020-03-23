@@ -5,7 +5,7 @@ import io.vertx.mqtt.MqttClient;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MqttHandle {
+public class MqttService {
   MqttClient client = MqttClient.create(Vertx.vertx());
 
   public void start() {
