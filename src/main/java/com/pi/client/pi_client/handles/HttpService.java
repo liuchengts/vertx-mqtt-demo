@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HttpService {
   static HttpServer httpServer;
   static Vertx vertx = Vertx.vertx();
+  static int port = 8080;
 
   public static void start() {
     httpServer = vertx.createHttpServer();
@@ -35,9 +36,9 @@ public class HttpService {
       });
     });
     httpServer.requestHandler(router)
-      .listen(8080, http -> {
+      .listen(port, http -> {
         if (http.succeeded()) {
-          log.info("HTTP server started on port 8888");
+          log.info("HTTP server started on port ", port);
         }
       });
   }

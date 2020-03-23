@@ -11,6 +11,11 @@ public class PiApplication extends AbstractVerticle {
     service();
   }
 
+  @Override
+  public void start() throws Exception {
+    service();
+  }
+
   static void service() {
     try {
       HttpService.start();
