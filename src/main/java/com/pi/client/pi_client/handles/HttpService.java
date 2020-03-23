@@ -1,64 +1,75 @@
 package com.pi.client.pi_client.handles;
 
 import com.pi.client.pi_client.model.KeyConstant;
-import com.pi.client.pi_client.model.RequestDTO;
 import com.pi.client.pi_client.model.ResponseDTO;
 import com.pi.client.pi_client.utlis.FileUtils;
-import com.pi.client.pi_client.utlis.GsonUtils;
 import com.pi.client.pi_client.utlis.ShellUtils;
-import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.client.WebClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class HttpService {
-  HttpServer httpServer;
+  static HttpServer httpServer;
+  static Vertx vertx = Vertx.vertx();
 
-  public void start() {
-    httpServer = Vertx.vertx().createHttpServer().requestHandler(req -> {
-      req.response()
-        .putHeader("content-type", "application/json")
-        .end(GsonUtils.objectToJson(handle(req.params())));
-    }).listen(8080, http -> {
-      if (http.succeeded()) {
-        log.info("HTTP server started on port 8888");
-      }
+  public static void start() {
+    httpServer = vertx.createHttpServer();
+    Router router = Router.router(vertx);
+    router.post("/post").handler(req -> {
+      req.request().bodyHandler(body -> {
+        req.response()
+          .putHeader("content-type", "application/json")
+          .end(Json.encode(handle(body.toJsonObject())));
+      });
     });
+    httpServer.requestHandler(router)
+      .listen(8080, http -> {
+        if (http.succeeded()) {
+          log.info("HTTP server started on port 8888");
+        }
+      });
   }
 
   /**
    * 处理器
    *
-   * @param params 入参
+   * @param jsonObject 入参
    * @return 出参
    */
-  ResponseDTO handle(MultiMap params) {
-    ResponseDTO.Type type = ResponseDTO.Type.OK;
-    String msg = "";
+  static ResponseDTO handle(JsonObject jsonObject) {
+    ResponseDTO responseDTO = new ResponseDTO();
+    responseDTO.setType(ResponseDTO.Type.OK);
+    responseDTO.setMsg("");
     try {
-      RequestDTO requestDTO = getRequestDTO(params);
-      log.info("requestDTO:{}", requestDTO);
-      if (RequestDTO.Type.WIFI == requestDTO.getType()) {
-        configFlie(params.get(KeyConstant.SSID), params.get(KeyConstant.PWD));
-      } else if (RequestDTO.Type.CLOSE == requestDTO.getType()) {
+      if (null == jsonObject) return responseDTO;
+      log.info("jsonObject:{}", jsonObject.toString());
+      if (KeyConstant.WIFI.equals(jsonObject.getString(KeyConstant.TYPE))) {
+        configFlie(jsonObject.getString(KeyConstant.SSID), jsonObject.getString(KeyConstant.PWD));
+        toMqtt();
+      } else if (KeyConstant.CLOSE.equals(jsonObject.getString(KeyConstant.TYPE))) {
         httpServer.close();
       } else {
-        type = ResponseDTO.Type.OK;
-        msg = "未知的请求类型";
+        responseDTO.setType(ResponseDTO.Type.OK);
+        responseDTO.setMsg("未知的请求类型");
       }
     } catch (Exception e) {
-      type = ResponseDTO.Type.ERROR;
-      msg = e.getMessage();
+      responseDTO.setType(ResponseDTO.Type.ERROR);
+      responseDTO.setMsg(e.getMessage());
       log.error("处理异常:", e);
     }
-    return ResponseDTO.builder()
-      .type(type)
-      .msg(msg)
-      .build();
+    return responseDTO;
   }
 
   /**
@@ -68,7 +79,7 @@ public class HttpService {
    * @param pwd  密码
    * @throws Exception
    */
-  void configFlie(String ssid, String pwd) throws Exception {
+  static void configFlie(String ssid, String pwd) throws Exception {
     List<String> contents = new ArrayList<>();
     contents.add("country=CN\r\n");
     contents.add("ctrl_interface=DIR=/var/run/wpa_supplicant  GROUP=netdev\r\n");
@@ -95,16 +106,37 @@ public class HttpService {
     contents.add("iface eth0 inet dhcp\r\n");
     FileUtils.outFile(KeyConstant.INTERFACES_PATH, contents);
     ShellUtils.exec(KeyConstant.SHELL_PATH_WIFI);
+
+
   }
 
   /**
-   * 入参解析
-   *
-   * @param params 入参
-   * @return 返回dto参数
+   * 发送mqtt消息
    */
-  RequestDTO getRequestDTO(MultiMap params) {
-    return (RequestDTO) GsonUtils.jsonToObject(params, RequestDTO.class);
+  static void toMqtt() {
+    Map map = new HashMap<String, Object>();
+    map.put("ip", checkNetwork());
+    MqttService.publish(Buffer.buffer(Json.encode(ResponseDTO.builder()
+      .type(ResponseDTO.Type.MQTT)
+      .msg("入网")
+      .data(Json.encode(map))
+      .build())));
   }
 
+  /**
+   * 检测网络ip
+   *
+   * @return 返回外网ip
+   */
+  static String checkNetwork() {
+    AtomicReference<String> ipAtomic = new AtomicReference<>();
+    WebClient.create(vertx).getAbs(KeyConstant.CHECK_NETWORK_URL).send(handle -> {
+      // 处理响应的结果
+      if (handle.succeeded())
+        ipAtomic.set(Json.decodeValue(handle.result().body(), Map.class).get(KeyConstant.IP_ORIGIN).toString());
+    });
+    while (null == ipAtomic.get()) {
+    }
+    return ipAtomic.get();
+  }
 }

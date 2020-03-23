@@ -1,6 +1,7 @@
 package com.pi.client.pi_client;
 
 import com.pi.client.pi_client.handles.HttpService;
+import com.pi.client.pi_client.handles.MqttService;
 import io.vertx.core.AbstractVerticle;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,9 +13,9 @@ public class PiApplication extends AbstractVerticle {
 
   static void service() {
     try {
-      new HttpService().start();
+      HttpService.start();
     } catch (Exception e) {
-      log.error("HttpServer error", e);
+      log.error("HttpService error", e);
     }
   }
 }

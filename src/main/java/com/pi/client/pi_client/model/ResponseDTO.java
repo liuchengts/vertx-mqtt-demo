@@ -29,6 +29,6 @@ public class ResponseDTO {
   String msg;
 
   public enum Type {
-    OK, ERROR;
+    OK, ERROR, MQTT;
   }
 }
