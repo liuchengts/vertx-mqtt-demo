@@ -9,6 +9,12 @@ import java.io.InputStreamReader;
 @Slf4j
 public class ShellUtils {
 
+  /**
+   * 执行shell并且打印执行结果
+   *
+   * @param path 要执行的脚本路径
+   * @throws IOException
+   */
   public static void exec(String path) throws IOException {
     Process process = Runtime.getRuntime().exec(path);
     BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
