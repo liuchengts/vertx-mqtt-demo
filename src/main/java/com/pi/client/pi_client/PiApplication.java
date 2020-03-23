@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PiApplication extends AbstractVerticle {
-  public static void main(String[] args) {
-    service();
-  }
+//  public static void main(String[] args) {
+//    service();
+//  }
 
   @Override
   public void start() throws Exception {
