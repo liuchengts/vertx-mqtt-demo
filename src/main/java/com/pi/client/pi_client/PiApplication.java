@@ -1,25 +1,18 @@
 package com.pi.client.pi_client;
 
-import com.pi.client.pi_client.handles.HttpService;
-import com.pi.client.pi_client.handles.MqttService;
-import com.pi.client.pi_client.model.ResponseDTO;
+import com.pi.client.pi_client.service.HttpService;
+import com.pi.client.pi_client.service.MqttService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.Json;
+import io.vertx.core.http.HttpServer;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class PiApplication extends AbstractVerticle {
-  static final Vertx vertx = Vertx.vertx();
-  static MqttService mqttService;
-  static HttpService httpService;
+  ApplicationContext applicationContext = new ApplicationContext();
 
   public static void main(String[] args) {
-    service();
+    new PiApplication().service();
   }
 
   @Override
@@ -29,18 +22,19 @@ public class PiApplication extends AbstractVerticle {
 
   @Override
   public void stop() {
-    httpService.getHttpServer().close();
-    mqttService.getClient().disconnect();
+    applicationContext.getHttpService().getHttpServer().close();
+    applicationContext.getMqttService().getClient().disconnect();
   }
 
-  static void service() {
+  void service() {
+    applicationContext.setVertx(Vertx.vertx());
     try {
-      mqttService = new MqttService(vertx);
+      applicationContext.setMqttService(new MqttService(applicationContext));
     } catch (Exception e) {
       log.error("MqttService error", e);
     }
     try {
-      httpService = new HttpService(vertx, mqttService);
+      applicationContext.setHttpService(new HttpService(applicationContext));
     } catch (Exception e) {
       log.error("HttpService error", e);
     }

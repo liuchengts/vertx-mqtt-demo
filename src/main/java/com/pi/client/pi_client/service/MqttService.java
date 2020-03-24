@@ -1,5 +1,6 @@
-package com.pi.client.pi_client.handles;
+package com.pi.client.pi_client.service;
 
+import com.pi.client.pi_client.ApplicationContext;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.Vertx;
 import io.vertx.mqtt.MqttClient;
@@ -9,15 +10,13 @@ import io.vertx.core.buffer.Buffer;
 @Slf4j
 public class MqttService {
   MqttClient client;
-  Vertx vertx;
 
   public MqttClient getClient() {
     return client;
   }
 
-  public MqttService(Vertx vertx) {
-    this.vertx = vertx;
-    client = MqttClient.create(vertx);
+  public MqttService(ApplicationContext applicationContext) {
+    client = MqttClient.create(applicationContext.getVertx());
     client.connect(1883, "mqtt.ayouran.com", c -> {
       if (c.succeeded()) {
         log.info("Connected to a server");

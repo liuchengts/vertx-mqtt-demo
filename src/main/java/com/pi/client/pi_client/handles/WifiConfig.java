@@ -1,15 +1,16 @@
 package com.pi.client.pi_client.handles;
 
+import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.model.KeyConstant;
 import com.pi.client.pi_client.model.ResponseDTO;
+import com.pi.client.pi_client.service.HttpService;
+import com.pi.client.pi_client.service.MqttService;
 import com.pi.client.pi_client.utlis.FileUtils;
 import com.pi.client.pi_client.utlis.ShellUtils;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.client.WebClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,35 +21,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
-public class HttpService {
+public class WifiConfig {
   MqttService mqttService;
-  HttpServer httpServer;
+  HttpService httpService;
   Vertx vertx;
-  static int port = 8888;
 
-  public HttpServer getHttpServer() {
-    return httpServer;
-  }
-
-  public HttpService(Vertx vertx, MqttService mqttService) {
-    this.vertx = vertx;
-    this.mqttService = mqttService;
-    Router router = Router.router(vertx);
-    router.get("/index").handler(req -> req.response()
-      .putHeader("content-type", "application/json")
-      .end("ok"));
-    router.post("/post").handler(req -> req.request().bodyHandler(body -> req.response()
-      .putHeader("content-type", "application/json")
-      .end(Json.encode(handle(body.toJsonObject())))));
-    httpServer = vertx.createHttpServer()
-      .requestHandler(router)
-      .listen(port, http -> {
-        if (http.succeeded()) {
-          log.info("HTTP server started on port:{}", port);
-        } else {
-          log.error("error", http.cause());
-        }
-      });
+  public WifiConfig(ApplicationContext applicationContext) {
+    this.httpService = applicationContext.getHttpService();
+    this.mqttService = applicationContext.getMqttService();
+    this.vertx = applicationContext.getVertx();
   }
 
   /**
@@ -57,7 +38,7 @@ public class HttpService {
    * @param jsonObject 入参
    * @return 出参
    */
-  ResponseDTO handle(JsonObject jsonObject) {
+  public ResponseDTO handle(JsonObject jsonObject) {
     ResponseDTO responseDTO = new ResponseDTO();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
@@ -68,7 +49,7 @@ public class HttpService {
         configFlie(jsonObject.getString(KeyConstant.SSID), jsonObject.getString(KeyConstant.PWD));
         toMqtt();
       } else if (KeyConstant.CLOSE.equals(jsonObject.getString(KeyConstant.TYPE))) {
-        httpServer.close();
+        httpService.getHttpServer().close();
       } else {
         responseDTO.setType(ResponseDTO.Type.OK);
         responseDTO.setMsg("未知的请求类型");
@@ -88,7 +69,7 @@ public class HttpService {
    * @param pwd  密码
    * @throws Exception
    */
-  void configFlie(String ssid, String pwd) throws Exception {
+  public void configFlie(String ssid, String pwd) throws Exception {
     List<String> contents = new ArrayList<>();
     contents.add("country=CN\r\n");
     contents.add("ctrl_interface=DIR=/var/run/wpa_supplicant  GROUP=netdev\r\n");
@@ -120,7 +101,7 @@ public class HttpService {
   /**
    * 发送mqtt消息
    */
-  void toMqtt() {
+  public void toMqtt() {
     Map<String, Object> map = new HashMap<>();
     map.put("ip", checkNetwork());
     mqttService.publish(Buffer.buffer(Json.encode(ResponseDTO.builder()
@@ -135,7 +116,7 @@ public class HttpService {
    *
    * @return 返回外网ip
    */
-  String checkNetwork() {
+  public String checkNetwork() {
     AtomicReference<String> ipAtomic = new AtomicReference<>();
     WebClient.create(vertx).getAbs(KeyConstant.CHECK_NETWORK_URL).send(handle -> {
       // 处理响应的结果
