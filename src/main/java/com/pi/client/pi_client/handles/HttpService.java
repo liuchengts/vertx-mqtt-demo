@@ -24,7 +24,7 @@ public class HttpService {
   MqttService mqttService;
   HttpServer httpServer;
   Vertx vertx;
-  static int port = 8080;
+  static int port = 8888;
 
   public HttpServer getHttpServer() {
     return httpServer;
@@ -33,19 +33,20 @@ public class HttpService {
   public HttpService(Vertx vertx, MqttService mqttService) {
     this.vertx = vertx;
     this.mqttService = mqttService;
-    httpServer = vertx.createHttpServer();
     Router router = Router.router(vertx);
-    router.post("/post").handler(req -> {
-      req.request().bodyHandler(body -> {
-        req.response()
-          .putHeader("content-type", "application/json")
-          .end(Json.encode(handle(body.toJsonObject())));
-      });
-    });
-    httpServer.requestHandler(router)
+    router.get("/index").handler(req -> req.response()
+      .putHeader("content-type", "application/json")
+      .end(Json.encode("ok")));
+    router.post("/post").handler(req -> req.request().bodyHandler(body -> req.response()
+      .putHeader("content-type", "application/json")
+      .end(Json.encode(handle(body.toJsonObject())))));
+    httpServer = vertx.createHttpServer()
+      .requestHandler(router)
       .listen(port, http -> {
         if (http.succeeded()) {
-          log.info("HTTP server started on port ", port);
+          log.info("HTTP server started on port:{}", port);
+        } else {
+          log.error("error", http.cause());
         }
       });
   }
