@@ -1,8 +1,11 @@
 package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.handles.WifiHandle;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mqtt.MqttClient;
 import lombok.extern.slf4j.Slf4j;
 import io.vertx.core.buffer.Buffer;
@@ -10,6 +13,7 @@ import io.vertx.core.buffer.Buffer;
 @Slf4j
 public class MqttService {
   MqttClient client;
+  WifiHandle wifiHandle;
 
   public MqttClient getClient() {
     return client;
@@ -34,6 +38,8 @@ public class MqttService {
         log.info("There are new message in topic: " + pub.topicName());
         log.info("Content(as string) of the message: " + pub.payload().toString());
         log.info("QoS: " + pub.qosLevel());
+        this.wifiHandle = new WifiHandle(applicationContext);
+        wifiHandle.handle(pub.payload().toJsonObject());
       });
   }
 
