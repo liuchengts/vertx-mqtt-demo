@@ -115,8 +115,6 @@ public class HttpService {
     contents.add("iface eth0 inet dhcp\r\n");
     FileUtils.outFile(KeyConstant.INTERFACES_PATH, contents);
     ShellUtils.exec(KeyConstant.SHELL_PATH_WIFI);
-
-
   }
 
   /**
