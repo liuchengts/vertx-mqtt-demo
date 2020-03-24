@@ -8,10 +8,11 @@ import io.vertx.core.buffer.Buffer;
 
 @Slf4j
 public class MqttService {
-  static MqttClient client;
-  static Vertx vertx = Vertx.vertx();
+  MqttClient client;
+  Vertx vertx;
 
-  public static void start() {
+  public MqttService(Vertx vertx) {
+    this.vertx = vertx;
     client = MqttClient.create(vertx);
     client.connect(1883, "mqtt.ayouran.com", c -> {
       if (c.succeeded()) {
@@ -33,7 +34,7 @@ public class MqttService {
       });
   }
 
-  public static void publish(Buffer payload) {
+  public void publish(Buffer payload) {
     client.publish("lot-pi", payload, MqttQoS.AT_LEAST_ONCE, false, false);
   }
 

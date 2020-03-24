@@ -21,11 +21,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class HttpService {
-  static HttpServer httpServer;
-  static Vertx vertx = Vertx.vertx();
+  MqttService mqttService;
+  HttpServer httpServer;
+  Vertx vertx;
   static int port = 8080;
 
-  public static void start() {
+  public HttpService(Vertx vertx, MqttService mqttService) {
+    this.vertx = vertx;
+    this.mqttService = mqttService;
     httpServer = vertx.createHttpServer();
     Router router = Router.router(vertx);
     router.post("/post").handler(req -> {
@@ -49,7 +52,7 @@ public class HttpService {
    * @param jsonObject 入参
    * @return 出参
    */
-  static ResponseDTO handle(JsonObject jsonObject) {
+  ResponseDTO handle(JsonObject jsonObject) {
     ResponseDTO responseDTO = new ResponseDTO();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
@@ -80,7 +83,7 @@ public class HttpService {
    * @param pwd  密码
    * @throws Exception
    */
-  static void configFlie(String ssid, String pwd) throws Exception {
+  void configFlie(String ssid, String pwd) throws Exception {
     List<String> contents = new ArrayList<>();
     contents.add("country=CN\r\n");
     contents.add("ctrl_interface=DIR=/var/run/wpa_supplicant  GROUP=netdev\r\n");
@@ -114,10 +117,11 @@ public class HttpService {
   /**
    * 发送mqtt消息
    */
-  static void toMqtt() {
-    Map map = new HashMap<String, Object>();
+  void toMqtt() {
+    Map<String, Object> map = new HashMap<>();
     map.put("ip", checkNetwork());
-    MqttService.publish(Buffer.buffer(Json.encode(ResponseDTO.builder()
+    if (null == mqttService) this.mqttService = new MqttService(vertx);
+    mqttService.publish(Buffer.buffer(Json.encode(ResponseDTO.builder()
       .type(ResponseDTO.Type.MQTT)
       .msg("入网")
       .data(Json.encode(map))
@@ -129,7 +133,7 @@ public class HttpService {
    *
    * @return 返回外网ip
    */
-  static String checkNetwork() {
+  String checkNetwork() {
     AtomicReference<String> ipAtomic = new AtomicReference<>();
     WebClient.create(vertx).getAbs(KeyConstant.CHECK_NETWORK_URL).send(handle -> {
       // 处理响应的结果
