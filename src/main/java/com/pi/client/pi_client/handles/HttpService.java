@@ -36,7 +36,7 @@ public class HttpService {
     Router router = Router.router(vertx);
     router.get("/index").handler(req -> req.response()
       .putHeader("content-type", "application/json")
-      .end(Json.encode("ok")));
+      .end("ok"));
     router.post("/post").handler(req -> req.request().bodyHandler(body -> req.response()
       .putHeader("content-type", "application/json")
       .end(Json.encode(handle(body.toJsonObject())))));
