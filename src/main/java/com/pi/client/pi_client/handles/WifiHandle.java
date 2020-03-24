@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
-public class WifiConfig {
+public class WifiHandle {
   MqttService mqttService;
   HttpService httpService;
   Vertx vertx;
 
-  public WifiConfig(ApplicationContext applicationContext) {
+  public WifiHandle(ApplicationContext applicationContext) {
     this.httpService = applicationContext.getHttpService();
     this.mqttService = applicationContext.getMqttService();
     this.vertx = applicationContext.getVertx();
