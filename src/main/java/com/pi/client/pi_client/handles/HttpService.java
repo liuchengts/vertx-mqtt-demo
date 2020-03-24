@@ -26,6 +26,10 @@ public class HttpService {
   Vertx vertx;
   static int port = 8080;
 
+  public HttpServer getHttpServer() {
+    return httpServer;
+  }
+
   public HttpService(Vertx vertx, MqttService mqttService) {
     this.vertx = vertx;
     this.mqttService = mqttService;
@@ -120,7 +124,6 @@ public class HttpService {
   void toMqtt() {
     Map<String, Object> map = new HashMap<>();
     map.put("ip", checkNetwork());
-    if (null == mqttService) this.mqttService = new MqttService(vertx);
     mqttService.publish(Buffer.buffer(Json.encode(ResponseDTO.builder()
       .type(ResponseDTO.Type.MQTT)
       .msg("入网")

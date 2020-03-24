@@ -11,6 +11,10 @@ public class MqttService {
   MqttClient client;
   Vertx vertx;
 
+  public MqttClient getClient() {
+    return client;
+  }
+
   public MqttService(Vertx vertx) {
     this.vertx = vertx;
     client = MqttClient.create(vertx);

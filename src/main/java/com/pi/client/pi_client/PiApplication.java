@@ -15,6 +15,8 @@ import java.util.Map;
 @Slf4j
 public class PiApplication extends AbstractVerticle {
   static final Vertx vertx = Vertx.vertx();
+  static MqttService mqttService;
+  static HttpService httpService;
 
   public static void main(String[] args) {
     service();
@@ -25,15 +27,20 @@ public class PiApplication extends AbstractVerticle {
     service();
   }
 
+  @Override
+  public void stop() {
+    httpService.getHttpServer().close();
+    mqttService.getClient().disconnect();
+  }
+
   static void service() {
-    MqttService mqttService = null;
     try {
       mqttService = new MqttService(vertx);
     } catch (Exception e) {
       log.error("MqttService error", e);
     }
     try {
-      new HttpService(vertx, mqttService);
+      httpService = new HttpService(vertx, mqttService);
     } catch (Exception e) {
       log.error("HttpService error", e);
     }
