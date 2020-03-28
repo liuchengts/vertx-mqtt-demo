@@ -43,17 +43,8 @@ public class WifiHandle {
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
     try {
-      if (null == jsonObject) return responseDTO;
-      log.info("jsonObject:{}", jsonObject.toString());
-      if (KeyConstant.WIFI.equals(jsonObject.getString(KeyConstant.TYPE))) {
-        configFlie(jsonObject.getString(KeyConstant.SSID), jsonObject.getString(KeyConstant.PWD));
-        toMqtt();
-      } else if (KeyConstant.CLOSE.equals(jsonObject.getString(KeyConstant.TYPE))) {
-        httpService.getHttpServer().close();
-      } else {
-        responseDTO.setType(ResponseDTO.Type.OK);
-        responseDTO.setMsg("未知的请求类型");
-      }
+      configFlie(jsonObject.getString(KeyConstant.SSID), jsonObject.getString(KeyConstant.PWD));
+      toMqtt();
     } catch (Exception e) {
       responseDTO.setType(ResponseDTO.Type.ERROR);
       responseDTO.setMsg(e.getMessage());

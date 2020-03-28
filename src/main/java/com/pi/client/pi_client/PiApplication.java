@@ -13,9 +13,7 @@ public class PiApplication extends AbstractVerticle {
   ApplicationContext applicationContext = new ApplicationContext();
 
   public static void main(String[] args) {
-    PiApplication piApplication = new PiApplication();
-    piApplication.init();
-    piApplication.service();
+    new PiApplication().start();
   }
 
   @Override
@@ -26,14 +24,12 @@ public class PiApplication extends AbstractVerticle {
 
   @Override
   public void stop() {
-    applicationContext.getHttpService().getHttpServer().close();
-    applicationContext.getMqttService().getMqttClient().disconnect();
+    applicationContext.getHandleAction().close();
   }
 
-  private void init() {
+  void init() {
     applicationContext.setVertx(Vertx.vertx());
-    HandleAction handleAction = new HandleAction(applicationContext);
-    applicationContext.setHandleAction(handleAction);
+    applicationContext.setHandleAction(new HandleAction(applicationContext));
   }
 
   void service() {
