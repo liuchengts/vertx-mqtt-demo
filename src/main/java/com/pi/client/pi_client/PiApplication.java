@@ -1,6 +1,7 @@
 package com.pi.client.pi_client;
 
 import com.pi.client.pi_client.handles.HandleAction;
+import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.service.HttpService;
 import com.pi.client.pi_client.service.MqttService;
 import io.vertx.core.AbstractVerticle;
@@ -43,6 +44,10 @@ public class PiApplication extends AbstractVerticle {
     } catch (Exception e) {
       log.error("HttpService error", e);
     }
-
+    try {
+      new FlowService(applicationContext);
+    } catch (Exception e) {
+      log.error("HttpService error", e);
+    }
   }
 }

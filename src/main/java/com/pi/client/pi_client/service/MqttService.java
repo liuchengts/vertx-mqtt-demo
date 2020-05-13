@@ -37,8 +37,9 @@ public class MqttService {
     applicationContext.setMqttService(this);
   }
 
-  public void publish(Buffer payload) {
-    mqttClient.publish("lot-pi", payload, MqttQoS.AT_LEAST_ONCE, false, false);
+  public void publish(String msg) {
+    log.info("send ->>> :{}", msg);
+    mqttClient.publish("lot-pi", Buffer.buffer(msg), MqttQoS.AT_LEAST_ONCE, false, false);
   }
 
 }
