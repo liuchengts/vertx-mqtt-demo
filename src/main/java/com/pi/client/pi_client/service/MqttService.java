@@ -1,7 +1,9 @@
 package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.model.ResponseDTO;
 import io.netty.handler.codec.mqtt.MqttQoS;
+import io.vertx.core.json.Json;
 import io.vertx.mqtt.MqttClient;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +39,10 @@ public class MqttService {
     applicationContext.setMqttService(this);
   }
 
-  public void publish(String msg) {
-    log.info("send ->>> :{}", msg);
-    mqttClient.publish("lot-pi", Buffer.buffer(msg), MqttQoS.AT_LEAST_ONCE, false, false);
+  public void publish(ResponseDTO responseDTO) {
+    String json = Json.encode(responseDTO);
+    log.info("send ->>> :{}", json);
+    mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false);
   }
 
 }

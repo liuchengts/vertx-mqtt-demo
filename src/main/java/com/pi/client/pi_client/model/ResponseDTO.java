@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDTO {
+public class ResponseDTO<T> {
   /**
    * 类型
    *
@@ -20,15 +20,25 @@ public class ResponseDTO {
    */
   Type type;
   /**
+   * 业务类型
+   *
+   * @see Type
+   */
+  ServiceType serviceType;
+  /**
    * 数据
    */
-  Object data;
+  T t;
   /**
-   * 消息内容
+   * 消息
    */
   String msg;
 
   public enum Type {
-    OK, ERROR, MQTT;
+    OK, ERROR
+  }
+
+  public enum ServiceType {
+    NET,FLOW
   }
 }

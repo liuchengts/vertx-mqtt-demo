@@ -95,11 +95,12 @@ public class WifiHandle {
   public void toMqtt() {
     Map<String, Object> map = new HashMap<>();
     map.put("ip", checkNetwork());
-    mqttService.publish(Json.encode(ResponseDTO.builder()
-      .type(ResponseDTO.Type.MQTT)
+    mqttService.publish(ResponseDTO.builder()
+      .type(ResponseDTO.Type.OK)
+      .serviceType(ResponseDTO.ServiceType.NET)
       .msg("入网")
-      .data(Json.encode(map))
-      .build()));
+      .t(map)
+      .build());
   }
 
   /**

@@ -2,10 +2,10 @@ package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.commom.FlowDTO;
+import com.pi.client.pi_client.model.ResponseDTO;
 import com.pi.client.pi_client.utlis.ShellUtils;
 import com.pi.client.pi_client.utlis.date.DateUtil;
 import io.netty.util.internal.StringUtil;
-import io.vertx.core.json.Json;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class FlowService {
-  final static String DEVICE_PATH_ROOT = "/root";
+  final static String DEVICE_PATH_ROOT = "/Users/liucheng";
+//  final static String DEVICE_PATH_ROOT = "/root";
   final static String FLOW = "flow.txt";
   MqttService mqttService;
 
@@ -30,42 +31,39 @@ public class FlowService {
    * 统计流量
    */
   void checkShell() {
-    try {
-      ShellUtils.exec("flow/check.sh");
-    } catch (IOException e) {
-      log.error("run flow check.sh error", e);
-    }
+    ShellUtils.exec("flow/check.sh");
   }
 
   /**
    * 清除流量统计
    */
   void clearShell() {
-    try {
-      ShellUtils.exec("flow/clear.sh");
-    } catch (IOException e) {
-      log.error("run flow clear.sh error", e);
-    }
+    ShellUtils.exec("flow/clear.sh");
   }
 
   void task() {
-    Calendar calendar = Calendar.getInstance();
-    calendar.set(Calendar.HOUR_OF_DAY, 18); //小时
-    calendar.set(Calendar.MINUTE, 29);//分钟
-    calendar.set(Calendar.SECOND, 0);//秒
-    Date date = calendar.getTime(); //第一次执行定时任务的时间
-    //如果第一次执行定时任务的时间 小于当前的时间
-    //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
-    if (date.before(new Date())) date = DateUtil.addDay(date, 1);
-    new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
-      @Override
-      public void run() {
-        log.info("定时任务开始执行...");
-        checkShell();
-        mqttService.publish(Json.encode(handleFlowText()));
-        clearShell();
-      }
-    }, date, 24 * 60 * 60 * 1000);
+//    Calendar calendar = Calendar.getInstance();
+//    calendar.set(Calendar.HOUR_OF_DAY, 0); //小时
+//    calendar.set(Calendar.MINUTE, 0);//分钟
+//    calendar.set(Calendar.SECOND, 59);//秒
+//    Date date = calendar.getTime(); //第一次执行定时任务的时间
+//    //如果第一次执行定时任务的时间 小于当前的时间
+//    //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
+//    if (date.before(new Date())) date = DateUtil.addDay(date, 1);
+//    new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
+//      @Override
+//      public void run() {
+//        log.info("定时任务开始执行...");
+//        checkShell();
+        mqttService.publish(ResponseDTO.builder()
+          .type(ResponseDTO.Type.OK)
+          .serviceType(ResponseDTO.ServiceType.FLOW)
+          .msg("流量上报")
+          .t(handleFlowText())
+          .build());
+//        clearShell();
+//      }
+//    }, date, 24 * 60 * 60 * 1000);
   }
 
   /**
