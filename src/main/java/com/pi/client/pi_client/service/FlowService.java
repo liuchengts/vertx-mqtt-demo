@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FlowService {
   final static String DEVICE_PATH_ROOT = "/Users/liucheng";
-  //  final static String DEVICE_PATH_ROOT = "/root";
+  //  final static String DEVICE_PATH_ROOT = "/tmp";
   final static String FLOW = "flow.txt";
   MqttService mqttService;
   ApplicationContext applicationContext;
