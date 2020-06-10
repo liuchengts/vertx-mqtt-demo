@@ -58,12 +58,14 @@ public class FlowService {
 //      public void run() {
 //        log.info("定时任务开始执行...");
 //    checkShell();
-    mqttService.publish(ResponseDTO.builder()
-      .type(ResponseDTO.Type.OK)
-      .serviceType(ResponseDTO.ServiceType.FLOW)
-      .msg("流量上报")
-      .t(handleFlowText())
-      .build());
+
+//    mqttService.publish(ResponseDTO.builder()
+//      .type(ResponseDTO.Type.OK)
+//      .serviceType(ResponseDTO.ServiceType.FLOW)
+//      .msg("流量上报")
+//      .t(handleFlowText())
+//      .build());
+
 //      }
 //    }, date, 24 * 60 * 60 * 1000);
   }

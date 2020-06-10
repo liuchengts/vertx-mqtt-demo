@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FlowHandle {
   MqttService mqttService;
   //  static final String CONFIG_PATH = "/etc/v2ary/config.json";
-  static final String CONFIG_PATH = "/Users/liucheng/config.json";
+  static final String CONFIG_PATH = "/Users/liucheng/it/config.json";
 
   public FlowHandle(ApplicationContext applicationContext) {
     this.mqttService = applicationContext.getMqttService();

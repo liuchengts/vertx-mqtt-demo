@@ -27,6 +27,7 @@ public interface KeyConstant {
   String TYPE = "type";
   String DATA = "t";
   String SERVICE_TYPE = "serviceType";
+  String DEVICE_NO = "deviceNo";
   // Type
   String OK = "OK";
   String ERROR = "ERROR";

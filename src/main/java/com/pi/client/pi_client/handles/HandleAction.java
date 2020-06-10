@@ -39,6 +39,10 @@ public class HandleAction {
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
     if (null == jsonObject) return responseDTO;
+    if (jsonObject.containsKey(KeyConstant.DEVICE_NO)
+      && !applicationContext.getId().equals(jsonObject.getString(KeyConstant.DEVICE_NO)))
+      return responseDTO;
+
     if (!KeyConstant.OK.equals(jsonObject.getString(KeyConstant.TYPE))) {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("响应失败");
