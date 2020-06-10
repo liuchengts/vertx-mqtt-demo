@@ -45,29 +45,29 @@ public class FlowService {
   }
 
   void task() {
-//    Calendar calendar = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
 //    calendar.set(Calendar.HOUR_OF_DAY, 0); //小时
 //    calendar.set(Calendar.MINUTE, 0);//分钟
 //    calendar.set(Calendar.SECOND, 59);//秒
-//    Date date = calendar.getTime(); //第一次执行定时任务的时间
-//    //如果第一次执行定时任务的时间 小于当前的时间
-//    //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
+    Date date = calendar.getTime(); //第一次执行定时任务的时间
+    //如果第一次执行定时任务的时间 小于当前的时间
+    //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
 //    if (date.before(new Date())) date = DateUtil.addDay(date, 1);
-//    new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
-//      @Override
-//      public void run() {
-//        log.info("定时任务开始执行...");
+    new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
+      @Override
+      public void run() {
+        log.info("定时任务开始执行...");
 //    checkShell();
 
-//    mqttService.publish(ResponseDTO.builder()
-//      .type(ResponseDTO.Type.OK)
-//      .serviceType(ResponseDTO.ServiceType.FLOW)
-//      .msg("流量上报")
-//      .t(handleFlowText())
-//      .build());
+        mqttService.publish(ResponseDTO.builder()
+          .type(ResponseDTO.Type.OK)
+          .serviceType(ResponseDTO.ServiceType.FLOW)
+          .msg("流量上报")
+          .t(handleFlowText())
+          .build());
 
-//      }
-//    }, date, 24 * 60 * 60 * 1000);
+      }
+    }, date, 1 * 60 * 1000);
   }
 
   /**
