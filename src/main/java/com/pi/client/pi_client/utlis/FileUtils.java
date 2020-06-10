@@ -17,17 +17,37 @@ public class FileUtils {
   public static void outFile(String path, List<String> contents) throws Exception {
     File file = new File(path);
     if (file.isFile()) {
-      FileWriter fileWriter = new FileWriter(file);
-      fileWriter.write("");
-      fileWriter.flush();
-      fileWriter.close();
+      try (FileWriter fileWriter = new FileWriter(file)) {
+        fileWriter.write("");
+      }
     } else {
       file.createNewFile();
     }
-    BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-    for (String l : contents) {
-      writer.write(l + "\r\n");
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      for (String l : contents) {
+        writer.write(l + "\r\n");
+      }
     }
-    writer.close();
+  }
+
+  /**
+   * 写文件（如果文件存在会先清除文件）
+   *
+   * @param path    文件路径
+   * @param content 内容写入文件
+   * @throws Exception
+   */
+  public static void outFile(String path, String content) throws Exception {
+    File file = new File(path);
+    if (file.isFile()) {
+      try (FileWriter fileWriter = new FileWriter(file)) {
+        fileWriter.write("");
+      }
+    } else {
+      file.createNewFile();
+    }
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      writer.write(content);
+    }
   }
 }

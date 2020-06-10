@@ -12,13 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PiApplication extends AbstractVerticle {
   ApplicationContext applicationContext = new ApplicationContext();
+  static String id;
 
   public static void main(String[] args) {
+    id = args[0];//设备id
     new PiApplication().start();
   }
 
   @Override
   public void start() {
+    applicationContext.setId(id);
     init();
     service();
   }
@@ -35,17 +38,17 @@ public class PiApplication extends AbstractVerticle {
 
   void service() {
     try {
-      new MqttService(applicationContext);
+      applicationContext.setMqttService(new MqttService(applicationContext));
     } catch (Exception e) {
       log.error("MqttService error", e);
     }
     try {
-      new HttpService(applicationContext);
+      applicationContext.setHttpService(new HttpService(applicationContext));
     } catch (Exception e) {
       log.error("HttpService error", e);
     }
     try {
-      new FlowService(applicationContext);
+      applicationContext.setFlowService(new FlowService(applicationContext));
     } catch (Exception e) {
       log.error("HttpService error", e);
     }

@@ -15,10 +15,12 @@ public class HandleAction {
   @Getter
   ApplicationContext applicationContext;
   WifiHandle wifiHandle;
+  FlowHandle flowHandle;
 
   public HandleAction(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     wifiHandle = new WifiHandle(applicationContext);
+    flowHandle = new FlowHandle(applicationContext);
   }
 
   public void close() {
@@ -32,16 +34,22 @@ public class HandleAction {
    * @param jsonObject 入参
    * @return 出参
    */
-  public ResponseDTO handle(JsonObject jsonObject) {
-    ResponseDTO responseDTO = new ResponseDTO();
+  public ResponseDTO<String> handle(JsonObject jsonObject) {
+    ResponseDTO<String> responseDTO = new ResponseDTO<>();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
     if (null == jsonObject) return responseDTO;
-    log.info("jsonObject:{}", jsonObject.toString());
-    if (KeyConstant.WIFI.equals(jsonObject.getString(KeyConstant.TYPE))) {
+    if (!KeyConstant.OK.equals(jsonObject.getString(KeyConstant.TYPE))) {
+      responseDTO.setType(ResponseDTO.Type.OK);
+      responseDTO.setMsg("响应失败");
+      return responseDTO;
+    }
+    if (KeyConstant.WIFI.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       responseDTO = wifiHandle.handle(jsonObject);
-    } else if (KeyConstant.CLOSE.equals(jsonObject.getString(KeyConstant.TYPE))) {
+    } else if (KeyConstant.CLOSE.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       close();
+    } else if (KeyConstant.FLOW.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      flowHandle.handle(jsonObject);
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");

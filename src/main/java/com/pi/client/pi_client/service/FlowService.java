@@ -18,19 +18,22 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FlowService {
   final static String DEVICE_PATH_ROOT = "/Users/liucheng";
-//  final static String DEVICE_PATH_ROOT = "/root";
+  //  final static String DEVICE_PATH_ROOT = "/root";
   final static String FLOW = "flow.txt";
   MqttService mqttService;
+  ApplicationContext applicationContext;
 
   public FlowService(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
     this.mqttService = applicationContext.getMqttService();
-    task();
+    new Thread(this::task).start();
   }
 
   /**
-   * 统计流量
+   * 开始统计流量
    */
   void checkShell() {
+    clearShell();
     ShellUtils.exec("flow/check.sh");
   }
 
@@ -54,14 +57,13 @@ public class FlowService {
 //      @Override
 //      public void run() {
 //        log.info("定时任务开始执行...");
-//        checkShell();
-        mqttService.publish(ResponseDTO.builder()
-          .type(ResponseDTO.Type.OK)
-          .serviceType(ResponseDTO.ServiceType.FLOW)
-          .msg("流量上报")
-          .t(handleFlowText())
-          .build());
-//        clearShell();
+//    checkShell();
+    mqttService.publish(ResponseDTO.builder()
+      .type(ResponseDTO.Type.OK)
+      .serviceType(ResponseDTO.ServiceType.FLOW)
+      .msg("流量上报")
+      .t(handleFlowText())
+      .build());
 //      }
 //    }, date, 24 * 60 * 60 * 1000);
   }
@@ -80,7 +82,7 @@ public class FlowService {
     FileInputStream inputStream = null;
     BufferedReader bufferedReader = null;
     Map<String, FlowDTO> map = new HashMap<>();
-    String deviceNo = getDeviceNo(file.getAbsolutePath());
+    String deviceNo = applicationContext.getId();
     try {
       inputStream = new FileInputStream(file);
       bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -163,18 +165,6 @@ public class FlowService {
     return id + protocol + port;
   }
 
-  /**
-   * 获取设备编号
-   * 需要注意 文件的最后的底层目录就是设备编号
-   * 例如  /root/abcdefg/flow.txt 设备编号为 abcdefg
-   *
-   * @param path 文件路径
-   * @return 返回设备编号
-   */
-  String getDeviceNo(String path) {
-    val ph = path.substring(0, path.lastIndexOf("/"));
-    return ph.substring(ph.lastIndexOf("/") + 1);
-  }
 
   /**
    * 单位转换

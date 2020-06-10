@@ -27,21 +27,20 @@ public class MqttService {
       }
     })
       .subscribeCompletionHandler(sub -> {
-        log.info("messageId: " + sub.messageId());
-        log.info("grantedQoSLevels: " + sub.grantedQoSLevels());
+//        log.info("messageId: " + sub.messageId());
+//        log.info("grantedQoSLevels: " + sub.grantedQoSLevels());
       })
       .publishHandler(pub -> {
-        log.info("There are new message in topic: " + pub.topicName());
-        log.info("Content(as string) of the message: " + pub.payload().toString());
-        log.info("QoS: " + pub.qosLevel());
+//        log.info("There are new message in topic: " + pub.topicName());
+//        log.info("Content(as string) of the message: " + pub.payload().toString());
+//        log.info("QoS: " + pub.qosLevel());
         applicationContext.getHandleAction().handle(pub.payload().toJsonObject());
       });
-    applicationContext.setMqttService(this);
   }
 
   public void publish(ResponseDTO responseDTO) {
     String json = Json.encode(responseDTO);
-    log.info("send ->>> :{}", json);
+//    log.info("send ->>> :{}", json);
     mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false);
   }
 

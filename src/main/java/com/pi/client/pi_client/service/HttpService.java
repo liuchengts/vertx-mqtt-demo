@@ -32,7 +32,6 @@ public class HttpService {
           log.error("error", http.cause());
         }
       });
-    applicationContext.setHttpService(this);
   }
 
 }

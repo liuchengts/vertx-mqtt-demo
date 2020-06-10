@@ -25,6 +25,12 @@ public interface KeyConstant {
   String WIFI = "wifi";
   String CLOSE = "close";
   String TYPE = "type";
-
-
+  String DATA = "t";
+  String SERVICE_TYPE = "serviceType";
+  // Type
+  String OK = "OK";
+  String ERROR = "ERROR";
+  // ServiceType
+  String NET = "NET";
+  String FLOW = "FLOW";
 }
