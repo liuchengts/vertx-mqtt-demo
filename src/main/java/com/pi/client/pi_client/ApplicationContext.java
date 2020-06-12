@@ -8,7 +8,11 @@ import io.vertx.core.Vertx;
 import lombok.Data;
 import lombok.Getter;
 
+import java.util.List;
+
 public class ApplicationContext {
+  @Getter
+  List<String> processArgs;
   @Getter
   HandleAction handleAction;
   @Getter
@@ -21,6 +25,11 @@ public class ApplicationContext {
   Vertx vertx;
   @Getter
   String id;
+
+  protected void setProcessArgs(List<String> processArgs) {
+    this.processArgs = processArgs;
+    this.setId(processArgs.get(0));
+  }
 
   protected void setHandleAction(HandleAction handleAction) {
     this.handleAction = handleAction;

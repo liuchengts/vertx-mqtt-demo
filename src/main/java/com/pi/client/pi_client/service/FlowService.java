@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class FlowService {
-  final static String DEVICE_PATH_ROOT = "/Users/liucheng";
-  //  final static String DEVICE_PATH_ROOT = "/tmp";
+  //  final static String DEVICE_PATH_ROOT = "/Users/liucheng";
+  final static String DEVICE_PATH_ROOT = "/tmp";
   final static String FLOW = "flow.txt";
   MqttService mqttService;
   ApplicationContext applicationContext;
@@ -58,14 +58,17 @@ public class FlowService {
       public void run() {
         log.info("定时任务开始执行...");
 //    checkShell();
-
+        Collection<FlowDTO> flowDTOS = handleFlowText();
+        if (flowDTOS.isEmpty()) {
+          log.warn("没有需要上报的数据");
+          return;
+        }
         mqttService.publish(ResponseDTO.builder()
           .type(ResponseDTO.Type.OK)
           .serviceType(ResponseDTO.ServiceType.FLOW)
           .msg("流量上报")
-          .t(handleFlowText())
+          .t(flowDTOS)
           .build());
-
       }
     }, date, 1 * 60 * 1000);
   }
@@ -79,7 +82,7 @@ public class FlowService {
     File file = getFile();
     if (null == file) {
       log.error("没有找到文件");
-      return null;
+      return new ArrayList<>();
     }
     FileInputStream inputStream = null;
     BufferedReader bufferedReader = null;
@@ -209,7 +212,8 @@ public class FlowService {
           .findFirst();
         if (optionalFile.isPresent()) fileAtomicReference.set(optionalFile);
       });
-    if (fileAtomicReference.get().isPresent()) return fileAtomicReference.get().get();
+    if (!"null".equals(fileAtomicReference.toString()) && fileAtomicReference.get().isPresent())
+      return fileAtomicReference.get().get();
     return null;
   }
 }

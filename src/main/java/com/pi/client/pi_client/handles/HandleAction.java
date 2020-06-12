@@ -35,14 +35,20 @@ public class HandleAction {
    * @return 出参
    */
   public ResponseDTO<String> handle(JsonObject jsonObject) {
+    log.info("核心控制收到消息");
     ResponseDTO<String> responseDTO = new ResponseDTO<>();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
-    if (null == jsonObject) return responseDTO;
-    if (jsonObject.containsKey(KeyConstant.DEVICE_NO)
-      && !applicationContext.getId().equals(jsonObject.getString(KeyConstant.DEVICE_NO)))
+    String device_no_local = applicationContext.getId();
+    String device_no_msg = jsonObject.containsKey(KeyConstant.DEVICE_NO) ? jsonObject.getString(KeyConstant.DEVICE_NO) : null;
+    if (null == jsonObject) {
+      log.warn("没有任何内容");
       return responseDTO;
-
+    }
+    if (null != device_no_msg && !device_no_local.equals(device_no_msg)) {
+      log.warn("不是自己的设备消息 device_no_local:{}  device_no_msg:{}", device_no_local, device_no_msg);
+      return responseDTO;
+    }
     if (!KeyConstant.OK.equals(jsonObject.getString(KeyConstant.TYPE))) {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("响应失败");

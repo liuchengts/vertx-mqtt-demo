@@ -32,8 +32,11 @@ public class MqttService {
       })
       .publishHandler(pub -> {
 //        log.info("There are new message in topic: " + pub.topicName());
-//        log.info("Content(as string) of the message: " + pub.payload().toString());
+        log.info("Content(as string) of the message: " + pub.payload().toString());
 //        log.info("QoS: " + pub.qosLevel());
+        log.info("开始输出===============");
+        log.info("json:" + pub.payload().toJsonObject().toString());
+        log.info("输出完毕===============");
         applicationContext.getHandleAction().handle(pub.payload().toJsonObject());
       });
   }

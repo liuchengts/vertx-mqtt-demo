@@ -5,23 +5,15 @@ import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.service.HttpService;
 import com.pi.client.pi_client.service.MqttService;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PiApplication extends AbstractVerticle {
   ApplicationContext applicationContext = new ApplicationContext();
-  static String id;
-
-  public static void main(String[] args) {
-    id = args[0];//设备id
-    new PiApplication().start();
-  }
 
   @Override
   public void start() {
-    applicationContext.setId(id);
+    log.info("开始启动 *************************");
     init();
     service();
   }
@@ -32,7 +24,8 @@ public class PiApplication extends AbstractVerticle {
   }
 
   void init() {
-    applicationContext.setVertx(Vertx.vertx());
+    applicationContext.setProcessArgs(processArgs());
+    applicationContext.setVertx(vertx);
     applicationContext.setHandleAction(new HandleAction(applicationContext));
   }
 
