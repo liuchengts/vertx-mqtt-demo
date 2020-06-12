@@ -35,7 +35,6 @@ public class HandleAction {
    * @return 出参
    */
   public ResponseDTO<String> handle(JsonObject jsonObject) {
-    log.info("核心控制收到消息");
     ResponseDTO<String> responseDTO = new ResponseDTO<>();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
