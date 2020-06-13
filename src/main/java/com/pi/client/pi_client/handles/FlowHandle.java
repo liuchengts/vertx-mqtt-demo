@@ -23,13 +23,13 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class FlowHandle {
   MqttService mqttService;
-  static final String CONFIG_PATH = "/etc/v2ary/config.json";
-//    static final String CONFIG_PATH = "/Users/liucheng/it/config.json";
+  static final String CONFIG_PATH = "/tmp/v2ary/config.json";
   static final String TMP_CONFIG_NAME = ".tmp";
 
   public FlowHandle(ApplicationContext applicationContext) {
     this.mqttService = applicationContext.getMqttService();
   }
+
 
   /**
    * 应用流量文件

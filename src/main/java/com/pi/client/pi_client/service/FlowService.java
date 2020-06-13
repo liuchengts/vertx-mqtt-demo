@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class FlowService {
-  //  final static String DEVICE_PATH_ROOT = "/Users/liucheng";
   final static String DEVICE_PATH_ROOT = "/tmp";
   final static String FLOW = "flow.txt";
   MqttService mqttService;
@@ -201,19 +200,23 @@ public class FlowService {
    * @return 返回文件
    */
   File getFile() {
-    AtomicReference<Optional<File>> fileAtomicReference = new AtomicReference<>();
-    Arrays.stream(Objects.requireNonNull(new File(DEVICE_PATH_ROOT).listFiles()))
-      .filter(File::isDirectory)
-      .filter(f -> !".".equals(f.getName().substring(0, 1)))
-      .filter(f -> f.listFiles() != null)
-      .forEach(f -> {
-        Optional<File> optionalFile = Arrays.stream(Objects.requireNonNull(f.listFiles()))
-          .filter(fi -> FLOW.equals(fi.getName()))
-          .findFirst();
-        if (optionalFile.isPresent()) fileAtomicReference.set(optionalFile);
-      });
-    if (!"null".equals(fileAtomicReference.toString()) && fileAtomicReference.get().isPresent())
-      return fileAtomicReference.get().get();
+    try {
+      AtomicReference<Optional<File>> fileAtomicReference = new AtomicReference<>();
+      Arrays.stream(Objects.requireNonNull(new File(DEVICE_PATH_ROOT).listFiles()))
+        .filter(File::isDirectory)
+        .filter(f -> !".".equals(f.getName().substring(0, 1)))
+        .filter(f -> f.listFiles() != null)
+        .forEach(f -> {
+          Optional<File> optionalFile = Arrays.stream(Objects.requireNonNull(f.listFiles()))
+            .filter(fi -> FLOW.equals(fi.getName()))
+            .findFirst();
+          if (optionalFile.isPresent()) fileAtomicReference.set(optionalFile);
+        });
+      if (!"null".equals(fileAtomicReference.toString()) && fileAtomicReference.get().isPresent())
+        return fileAtomicReference.get().get();
+    } catch (Exception e) {
+      log.error("获取流量文件失败", e);
+    }
     return null;
   }
 }
