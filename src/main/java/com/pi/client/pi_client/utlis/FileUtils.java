@@ -1,13 +1,8 @@
 package com.pi.client.pi_client.utlis;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileUtils {
 
@@ -72,5 +67,25 @@ public class FileUtils {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * 按行读文件
+   *
+   * @param path 文件路径
+   * @return 按行返回数据
+   * @throws Exception
+   */
+  public static List<String> readFile(String path) throws Exception {
+    List<String> list = new ArrayList<>();
+    try (FileInputStream inputStream = new FileInputStream(path);
+         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+    ) {
+      String str;
+      while ((str = bufferedReader.readLine()) != null) {
+        list.add(str);
+      }
+    }
+    return list;
   }
 }
