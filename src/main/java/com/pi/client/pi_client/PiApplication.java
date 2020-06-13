@@ -5,15 +5,27 @@ import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.service.HttpService;
 import com.pi.client.pi_client.service.MqttService;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Vertx;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class PiApplication extends AbstractVerticle {
-  ApplicationContext applicationContext = new ApplicationContext();
+  static ApplicationContext applicationContext = new ApplicationContext();
+  static boolean dev = false;
+
+  public static void main(String[] args) {
+    dev = true;
+    applicationContext.setProcessArgs(Arrays.stream(args).collect(Collectors.toList()));
+    Vertx.vertx().deployVerticle(PiApplication.class.getName());
+  }
 
   @Override
   public void start() {
-    log.info("开始启动 *************************");
+    log.info("开始启动 *************************运行模式:{}", (dev ? "本地开发模式" : "jar运行模式"));
     init();
     service();
   }
@@ -24,7 +36,11 @@ public class PiApplication extends AbstractVerticle {
   }
 
   void init() {
-    applicationContext.setProcessArgs(processArgs());
+    if (!dev) {
+      List<String> processArgs = processArgs();
+      if (null == processArgs || processArgs.isEmpty()) throw new RuntimeException("必要的启动参数不存在");
+      applicationContext.setProcessArgs(processArgs);
+    }
     applicationContext.setVertx(vertx);
     applicationContext.setHandleAction(new HandleAction(applicationContext));
   }

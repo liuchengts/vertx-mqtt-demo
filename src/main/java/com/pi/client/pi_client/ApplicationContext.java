@@ -48,6 +48,7 @@ public class ApplicationContext {
   }
 
   protected void setVertx(Vertx vertx) {
+    if (null == vertx) vertx = Vertx.vertx();
     this.vertx = vertx;
   }
 

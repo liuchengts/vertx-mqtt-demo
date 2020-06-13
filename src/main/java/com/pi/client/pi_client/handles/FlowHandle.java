@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FlowHandle {
   MqttService mqttService;
   static final String CONFIG_PATH = "/etc/v2ary/config.json";
-  //  static final String CONFIG_PATH = "/Users/liucheng/it/config.json";
+//    static final String CONFIG_PATH = "/Users/liucheng/it/config.json";
   static final String TMP_CONFIG_NAME = ".tmp";
 
   public FlowHandle(ApplicationContext applicationContext) {
@@ -49,10 +49,10 @@ public class FlowHandle {
     log.info("flow 收到指令");
     try {
       FileUtils.outFile(CONFIG_PATH + TMP_CONFIG_NAME, data);
+      restartShell();
     } catch (Exception e) {
       log.error("指令处理失败", e);
     }
-    restartShell();
   }
 
 }
