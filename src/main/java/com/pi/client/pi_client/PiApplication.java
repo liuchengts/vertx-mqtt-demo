@@ -61,5 +61,6 @@ public class PiApplication extends AbstractVerticle {
     } catch (Exception e) {
       log.error("HttpService error", e);
     }
+    log.info("********************* ok ************************************");
   }
 }
