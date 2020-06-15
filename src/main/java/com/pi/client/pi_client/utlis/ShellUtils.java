@@ -6,18 +6,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class ShellUtils {
-//  public static void main(String[] args) {
-//    exec("flow/test.sh");
-//    exec("/Users/liucheng/it/lc/pi-client/src/main/resources/flow/test.sh");
-//  }
+
+  /**
+   * 可执行脚本的根目录
+   */
+  static final String SHELL_ROOT = "/tmp/shell-deployment/";
 
   public static String getPathTmp(String shellPath) {
-    return Thread.class.getResource("/" + shellPath).getPath();
+    return Thread.class.getResource("/" + shellPath).getFile();
   }
 
   /**
@@ -29,19 +31,34 @@ public class ShellUtils {
    */
   public static List<String> exec(String path, String... args) {
     if (!File.separator.equals(path.substring(0, 1))) {
-      path = getPathTmp(path);
-//      tmpShellCopy(path);
+//      path = getPathTmp(path);
+//      path= tmpShellCopy(path);
+      path = SHELL_ROOT + path;
     }
     List<String> list = new ArrayList<>();
-    BufferedReader input = null;
+    String cmd = "sh " + path + " " + args;
+    String[] envp = new String[]{"/usr/bin/env bash", "/usr/bin/env sh", "/usr/bin"};
+    int status = 0;
+    Process process = null;
     try {
-      String cmd = "sh " + path + " " + args;
-      String[] envp = new String[]{"/usr/bin/env bash", "/usr/bin/env sh"};
-      File dir = new File("/usr/bin");
-      Process process = Runtime.getRuntime().exec(cmd, envp, dir);
-      int status = process.waitFor();
-      if (status != 0) log.error("Failed to call shell's command =>> status:{}", status);
-      input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+      process = Runtime.getRuntime().exec(cmd, envp, new File(SHELL_ROOT));
+      status = process.waitFor();
+    } catch (InterruptedException | IOException e) {
+      log.error("exec error", e);
+      return list;
+    }
+    if (status != 0) {
+      log.error("Failed to call shell's command =>> status:{}", status);
+      try (BufferedReader inputError = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+        String line = "";
+        while ((line = inputError.readLine()) != null) {
+          log.info(line);
+        }
+      } catch (IOException e) {
+        log.error("error [" + path + " ]shell error", e);
+      }
+    }
+    try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line = "";
       while ((line = input.readLine()) != null) {
         log.info(line);
@@ -49,14 +66,6 @@ public class ShellUtils {
       }
     } catch (Exception e) {
       log.error("run [" + path + " ]shell error", e);
-    } finally {
-      if (null != input) {
-        try {
-          input.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
     return list;
   }
