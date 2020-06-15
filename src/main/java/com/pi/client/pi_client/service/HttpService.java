@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class HttpService {
   @Getter
   HttpServer httpServer;
-  static int port = 8888;
+  static int port = 19200;
 
   public HttpService(ApplicationContext applicationContext) {
     this.httpServer = applicationContext.getVertx().createHttpServer();
