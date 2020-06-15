@@ -4,10 +4,12 @@ import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.service.HttpService;
 import com.pi.client.pi_client.service.MqttService;
+import io.netty.util.internal.StringUtil;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,10 +18,11 @@ import java.util.stream.Collectors;
 public class PiApplication extends AbstractVerticle {
   static ApplicationContext applicationContext = new ApplicationContext();
   static boolean dev = false;
+  //启动指定的参数值
+  static final String ARGS_KEY = "-DdeviceNo";
 
   public static void main(String[] args) {
     dev = true;
-    applicationContext.setProcessArgs(Arrays.stream(args).collect(Collectors.toList()));
     Vertx.vertx().deployVerticle(PiApplication.class.getName());
   }
 
@@ -36,11 +39,11 @@ public class PiApplication extends AbstractVerticle {
   }
 
   void init() {
+    applicationContext.setId(System.getProperty(ARGS_KEY));
+    if (StringUtil.isNullOrEmpty(applicationContext.getId())) throw new RuntimeException("必要的启动参数不存在");
     if (!dev) {
-      List<String> processArgs = processArgs();
-      log.info(processArgs.size() + " | processArgs:{}", processArgs);
-      if (null == processArgs || processArgs.isEmpty()) throw new RuntimeException("必要的启动参数不存在");
-      applicationContext.setProcessArgs(processArgs);
+      applicationContext.setProcessArgs(processArgs());
+      log.info("processArgs:{}", applicationContext.getProcessArgs());
     }
     applicationContext.setVertx(vertx);
     applicationContext.setHandleAction(new HandleAction(applicationContext));

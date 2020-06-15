@@ -11,6 +11,7 @@ import lombok.Getter;
 import java.util.List;
 
 public class ApplicationContext {
+
   @Getter
   List<String> processArgs;
   @Getter
@@ -28,7 +29,6 @@ public class ApplicationContext {
 
   protected void setProcessArgs(List<String> processArgs) {
     this.processArgs = processArgs;
-    this.setId(processArgs.get(0));
   }
 
   protected void setHandleAction(HandleAction handleAction) {
