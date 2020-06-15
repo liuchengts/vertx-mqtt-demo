@@ -38,7 +38,7 @@ public class PiApplication extends AbstractVerticle {
   void init() {
     if (!dev) {
       List<String> processArgs = processArgs();
-      log.info("processArgs:{}", processArgs);
+      log.info(processArgs.size() + " | processArgs:{}", processArgs);
       if (null == processArgs || processArgs.isEmpty()) throw new RuntimeException("必要的启动参数不存在");
       applicationContext.setProcessArgs(processArgs);
     }
