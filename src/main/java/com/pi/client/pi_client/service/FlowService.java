@@ -33,30 +33,33 @@ public class FlowService {
    */
   void checkShell() {
     clearShell();
-    ShellUtils.exec("flow/check.sh");
+    log.info("[脚本执行] 开始统计流量");
+    new Thread(() -> ShellUtils.exec("flow/check.sh")).start();
   }
 
   /**
    * 清除流量统计
    */
   void clearShell() {
-    ShellUtils.exec("flow/clear.sh");
+    log.info("[脚本执行] 清除流量统计");
+    new Thread(() -> ShellUtils.exec("flow/clear.sh")).start();
+  }
+
+  /**
+   * 增加端口流量统计
+   */
+  void addPort() {
+    log.info("[脚本执行] 增加端口流量统计");
+    new Thread(() -> ShellUtils.exec("flow/addPort.sh", "12028", "12040")).start();
   }
 
   void task() {
-    Calendar calendar = Calendar.getInstance();
-//    calendar.set(Calendar.HOUR_OF_DAY, 0); //小时
-//    calendar.set(Calendar.MINUTE, 0);//分钟
-//    calendar.set(Calendar.SECOND, 59);//秒
-    Date date = calendar.getTime(); //第一次执行定时任务的时间
-    //如果第一次执行定时任务的时间 小于当前的时间
-    //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
-//    if (date.before(new Date())) date = DateUtil.addDay(date, 1);
+    addPort();
     new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
       @Override
       public void run() {
         log.info("定时任务开始执行...");
-//    checkShell();
+        checkShell();
         Collection<FlowDTO> flowDTOS = handleFlowText();
         if (flowDTOS.isEmpty()) {
           log.warn("没有需要上报的数据");
@@ -69,7 +72,7 @@ public class FlowService {
           .t(flowDTOS)
           .build());
       }
-    }, date, 1 * 60 * 1000);
+    }, new Date(), 1 * 60 * 1000);
   }
 
   /**
