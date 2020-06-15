@@ -35,7 +35,7 @@ public class FlowHandle {
    * 应用流量文件
    */
   void restartShell() {
-    ShellUtils.exec("flow/v2ray.sh");
+    new Thread(() -> ShellUtils.exec("flow/v2ray.sh")).start();
   }
 
   /**

@@ -43,7 +43,7 @@ public class ShellUtils {
     try {
       process = Runtime.getRuntime().exec(cmd, envp, new File(SHELL_ROOT));
       status = process.waitFor();
-    } catch (InterruptedException | IOException e) {
+    } catch (Exception e) {
       log.error("exec error", e);
       return list;
     }
