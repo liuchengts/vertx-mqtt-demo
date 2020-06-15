@@ -19,7 +19,7 @@ public class PiApplication extends AbstractVerticle {
   static ApplicationContext applicationContext = new ApplicationContext();
   static boolean dev = false;
   //启动指定的参数值
-  static final String ARGS_KEY = "-DdeviceNo";
+  static final String ARGS_KEY = "deviceNo";
 
   public static void main(String[] args) {
     dev = true;
