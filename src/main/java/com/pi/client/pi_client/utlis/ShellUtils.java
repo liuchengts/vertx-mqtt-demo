@@ -38,7 +38,7 @@ public class ShellUtils {
       path = SHELL_ROOT + path;
     }
     List<String> list = new ArrayList<>();
-    String cmd = "sh " + path;
+    String cmd = "bash " + path;
     if (null != args) {
       cmd = cmd + " " + String.join(" ", args);
     }
