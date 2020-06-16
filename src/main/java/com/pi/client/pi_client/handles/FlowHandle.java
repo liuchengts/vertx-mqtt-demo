@@ -34,8 +34,6 @@ public class FlowHandle {
    */
   public void handle(JsonObject jsonObject) {
     String data = jsonObject.getString(KeyConstant.DATA);
-//    log.info("flow 收到指令 :{}", data);
-    log.info("flow 收到指令");
     try {
       FileUtils.outFile(CONFIG_PATH + TMP_CONFIG_NAME, data);
       restartShell();

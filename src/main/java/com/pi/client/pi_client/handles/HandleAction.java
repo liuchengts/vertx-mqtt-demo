@@ -16,11 +16,13 @@ public class HandleAction {
   ApplicationContext applicationContext;
   WifiHandle wifiHandle;
   FlowHandle flowHandle;
+  ShellHandle shellHandle;
 
   public HandleAction(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     wifiHandle = new WifiHandle(applicationContext);
     flowHandle = new FlowHandle(applicationContext);
+    shellHandle = new ShellHandle(applicationContext);
   }
 
   public void close() {
@@ -59,6 +61,8 @@ public class HandleAction {
       close();
     } else if (KeyConstant.FLOW.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       flowHandle.handle(jsonObject);
+    } else if (KeyConstant.SHELL_PULL.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      shellHandle.handle(jsonObject);
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");

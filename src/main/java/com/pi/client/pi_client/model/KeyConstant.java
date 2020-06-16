@@ -32,6 +32,7 @@ public interface KeyConstant {
   String OK = "OK";
   String ERROR = "ERROR";
   // ServiceType
-  String NET = "NET";
-  String FLOW = "FLOW";
+  String NET = "NET"; // 网络相关
+  String FLOW = "FLOW"; //流量相关
+  String SHELL_PULL = "SHELL_PULL"; //更新脚本
 }
