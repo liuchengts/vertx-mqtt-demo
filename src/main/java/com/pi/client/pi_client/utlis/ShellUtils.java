@@ -37,6 +37,7 @@ public class ShellUtils {
     }
     List<String> list = new ArrayList<>();
     String cmd = "sh " + path + " " + args;
+    log.info("cmd:{}", cmd);
     String[] envp = new String[]{"/usr/bin/env bash", "/usr/bin/env sh", "/usr/bin"};
     int status = 0;
     Process process = null;
