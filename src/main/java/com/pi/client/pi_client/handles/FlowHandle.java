@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlowHandle {
   MqttService mqttService;
-  static final String CONFIG_PATH = "/tmp/v2ray/config.json";
+  static final String CONFIG_PATH = "/etc/v2ray/config.json";
   static final String TMP_CONFIG_NAME = ".tmp";
 
   public FlowHandle(ApplicationContext applicationContext) {
