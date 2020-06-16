@@ -1,24 +1,21 @@
 package com.pi.client.pi_client.handles;
 
-import com.pi.client.pi_client.ApplicationContext;
-import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.utlis.ShellUtils;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ShellHandle {
-  MqttService mqttService;
 
-  public ShellHandle(ApplicationContext applicationContext) {
-    this.mqttService = applicationContext.getMqttService();
+  public ShellHandle() {
+    updateShell();
   }
 
 
   /**
    * 更新脚本
    */
-  void updateShell() {
+  public void updateShell() {
     log.info("[脚本执行] 更新脚本");
     new Thread(() -> ShellUtils.exec("get-pull.sh")).start();
   }

@@ -22,7 +22,7 @@ public class HandleAction {
     this.applicationContext = applicationContext;
     wifiHandle = new WifiHandle(applicationContext);
     flowHandle = new FlowHandle(applicationContext);
-    shellHandle = new ShellHandle(applicationContext);
+    shellHandle = new ShellHandle();
   }
 
   public void close() {
