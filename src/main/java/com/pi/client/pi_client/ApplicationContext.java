@@ -2,10 +2,10 @@ package com.pi.client.pi_client;
 
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
-import com.pi.client.pi_client.service.HttpService;
-import com.pi.client.pi_client.service.MqttService;
+import com.pi.client.pi_client.communication.HttpService;
+import com.pi.client.pi_client.communication.MqttService;
+import com.pi.client.pi_client.service.HeartbeatService;
 import io.vertx.core.Vertx;
-import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
@@ -23,9 +23,15 @@ public class ApplicationContext {
   @Getter
   FlowService flowService;
   @Getter
+  HeartbeatService heartbeatService;
+  @Getter
   Vertx vertx;
   @Getter
   String id;
+
+  protected void setHeartbeatService(HeartbeatService heartbeatService) {
+    this.heartbeatService = heartbeatService;
+  }
 
   protected void setProcessArgs(List<String> processArgs) {
     this.processArgs = processArgs;

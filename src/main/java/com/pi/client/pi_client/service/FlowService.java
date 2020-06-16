@@ -2,6 +2,7 @@ package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.commom.FlowDTO;
+import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.model.ResponseDTO;
 import com.pi.client.pi_client.utlis.ShellUtils;
 import com.pi.client.pi_client.utlis.date.DateUtil;
@@ -12,9 +13,11 @@ import lombok.var;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+/**
+ * 流量业务
+ */
 @Slf4j
 public class FlowService {
   final static String DEVICE_PATH_ROOT = "/tmp";
@@ -58,7 +61,7 @@ public class FlowService {
     new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
       @Override
       public void run() {
-        log.info("定时任务开始执行...");
+        log.info("定时[" + this.getClass().getName() + "]任务开始执行...");
         checkShell();
         Collection<FlowDTO> flowDTOS = handleFlowText();
         if (flowDTOS.isEmpty()) {

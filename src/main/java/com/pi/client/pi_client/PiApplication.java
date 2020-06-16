@@ -2,17 +2,13 @@ package com.pi.client.pi_client;
 
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
-import com.pi.client.pi_client.service.HttpService;
-import com.pi.client.pi_client.service.MqttService;
+import com.pi.client.pi_client.communication.HttpService;
+import com.pi.client.pi_client.communication.MqttService;
+import com.pi.client.pi_client.service.HeartbeatService;
 import io.netty.util.internal.StringUtil;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class PiApplication extends AbstractVerticle {
@@ -63,6 +59,11 @@ public class PiApplication extends AbstractVerticle {
     }
     try {
       applicationContext.setFlowService(new FlowService(applicationContext));
+    } catch (Exception e) {
+      log.error("HttpService error", e);
+    }
+    try {
+      applicationContext.setHeartbeatService(new HeartbeatService(applicationContext));
     } catch (Exception e) {
       log.error("HttpService error", e);
     }

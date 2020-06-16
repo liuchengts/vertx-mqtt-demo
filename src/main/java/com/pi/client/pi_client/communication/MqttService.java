@@ -1,4 +1,4 @@
-package com.pi.client.pi_client.service;
+package com.pi.client.pi_client.communication;
 
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.model.ResponseDTO;
@@ -13,7 +13,6 @@ import io.vertx.core.buffer.Buffer;
 public class MqttService {
   @Getter
   MqttClient mqttClient;
-
 
   public MqttService(ApplicationContext applicationContext) {
     mqttClient = MqttClient.create(applicationContext.getVertx());

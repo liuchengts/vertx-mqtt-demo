@@ -1,4 +1,4 @@
-package com.pi.client.pi_client.service;
+package com.pi.client.pi_client.communication;
 
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.handles.HandleAction;
