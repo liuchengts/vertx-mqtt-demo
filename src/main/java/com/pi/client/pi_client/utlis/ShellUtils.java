@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class ShellUtils {
@@ -36,7 +38,10 @@ public class ShellUtils {
       path = SHELL_ROOT + path;
     }
     List<String> list = new ArrayList<>();
-    String cmd = "sh " + path + " " + args;
+    String cmd = "sh " + path;
+    if (null != args) {
+      cmd = cmd + " " + String.join(" ", args);
+    }
     log.info("cmd:{}", cmd);
     String[] envp = new String[]{"/usr/bin/env bash", "/usr/bin/env sh", "/usr/bin"};
     int status = 0;
