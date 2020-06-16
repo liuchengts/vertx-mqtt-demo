@@ -89,13 +89,10 @@ public class FlowService {
       log.error("没有找到文件");
       return new ArrayList<>();
     }
-    FileInputStream inputStream = null;
-    BufferedReader bufferedReader = null;
     Map<String, FlowDTO> map = new HashMap<>();
     String deviceNo = applicationContext.getId();
-    try {
-      inputStream = new FileInputStream(file);
-      bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+    try (FileInputStream inputStream = new FileInputStream(file);
+         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
       String str = null;
       Date writeTime = null;
       Boolean fag = null;
@@ -127,7 +124,7 @@ public class FlowService {
           } else {
             dto.setFlowPut(quantity);
           }
-          map.put(key, dto);
+          if (dto.getFlowPut() > 0 || dto.getFlowPut() > 0) map.put(key, dto);
         } else {
           //out数据
           val port = Long.parseLong(prots.replace("spt:", ""));
@@ -139,26 +136,11 @@ public class FlowService {
           } else {
             dto.setFlowOut(quantity);
           }
-          map.put(key, dto);
+          if (dto.getFlowPut() > 0 || dto.getFlowPut() > 0) map.put(key, dto);
         }
       }
     } catch (Exception e) {
       log.error("解析流量统计文件异常", e);
-    } finally {
-      if (null != inputStream) {
-        try {
-          inputStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-      if (null != bufferedReader) {
-        try {
-          bufferedReader.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
     return map.values();
   }
