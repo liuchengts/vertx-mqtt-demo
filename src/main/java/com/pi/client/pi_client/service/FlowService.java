@@ -124,7 +124,8 @@ public class FlowService {
           } else {
             dto.setFlowPut(quantity);
           }
-          if (dto.getFlowPut() > 0 || dto.getFlowPut() > 0) map.put(key, dto);
+          if ((null != dto.getFlowPut() && dto.getFlowPut() > 0)
+            || (null != dto.getFlowPut() && dto.getFlowPut() > 0)) map.put(key, dto);
         } else {
           //out数据
           val port = Long.parseLong(prots.replace("spt:", ""));
@@ -136,7 +137,8 @@ public class FlowService {
           } else {
             dto.setFlowOut(quantity);
           }
-          if (dto.getFlowPut() > 0 || dto.getFlowPut() > 0) map.put(key, dto);
+          if ((null != dto.getFlowPut() && dto.getFlowPut() > 0)
+            || (null != dto.getFlowPut() && dto.getFlowPut() > 0)) map.put(key, dto);
         }
       }
     } catch (Exception e) {
