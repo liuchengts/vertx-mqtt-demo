@@ -210,9 +210,11 @@ public class FlowService {
         .filter(f -> !".".equals(f.getName().substring(0, 1)))
         .filter(f -> f.listFiles() != null)
         .forEach(f -> {
+          log.info("f=>>:{}", f);
           Optional<File> optionalFile = Arrays.stream(Objects.requireNonNull(f.listFiles()))
             .filter(fi -> FLOW.equals(fi.getName()))
             .findFirst();
+          log.info("fi=>>:{}", optionalFile);
           if (optionalFile.isPresent()) fileAtomicReference.set(optionalFile);
         });
       if (!"null".equals(fileAtomicReference.toString()) && fileAtomicReference.get().isPresent())
