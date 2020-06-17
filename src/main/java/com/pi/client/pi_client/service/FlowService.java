@@ -35,7 +35,6 @@ public class FlowService {
    * 开始统计流量
    */
   void checkShell() {
-
     Thread clearThread = new Thread(() -> ShellUtils.exec("flow/clear.sh"));
     Thread checkThread = new Thread(() -> ShellUtils.exec("flow/check.sh"));
     log.info("[脚本执行] 清除流量统计");
@@ -48,13 +47,6 @@ public class FlowService {
     }
     log.info("[脚本执行] 开始统计流量");
     checkThread.start();
-  }
-
-  /**
-   * 清除流量统计
-   */
-  void clearShell() {
-
   }
 
   /**
