@@ -35,17 +35,26 @@ public class FlowService {
    * 开始统计流量
    */
   void checkShell() {
-    clearShell();
+
+    Thread clearThread = new Thread(() -> ShellUtils.exec("flow/clear.sh"));
+    Thread checkThread = new Thread(() -> ShellUtils.exec("flow/check.sh"));
+    log.info("[脚本执行] 清除流量统计");
+    clearThread.start();
+    try {
+      clearThread.join();
+    } catch (InterruptedException e) {
+      log.error("线程等待异常", e);
+      clearThread.interrupt();
+    }
     log.info("[脚本执行] 开始统计流量");
-    new Thread(() -> ShellUtils.exec("flow/check.sh")).start();
+    checkThread.start();
   }
 
   /**
    * 清除流量统计
    */
   void clearShell() {
-    log.info("[脚本执行] 清除流量统计");
-    new Thread(() -> ShellUtils.exec("flow/clear.sh")).start();
+
   }
 
   /**
