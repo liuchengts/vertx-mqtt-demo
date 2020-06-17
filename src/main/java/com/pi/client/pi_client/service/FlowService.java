@@ -36,7 +36,7 @@ public class FlowService {
    */
   void checkShell() {
     log.info("[脚本执行] 开始统计流量");
-    new Thread(() -> ShellUtils.exec("flow/clear.sh")).start();
+    new Thread(() -> ShellUtils.exec("flow/check.sh")).start();
   }
 
   /**
