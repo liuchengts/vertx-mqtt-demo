@@ -17,7 +17,7 @@ public class ShellHandle {
    */
   public void updateShell() {
     log.info("[脚本执行] 更新脚本");
-    new Thread(() -> ShellUtils.exec("get-pull.sh")).start();
+    new Thread(() -> ShellUtils.exec("git-pull.sh")).start();
   }
 
   /**
