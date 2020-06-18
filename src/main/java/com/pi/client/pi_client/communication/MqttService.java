@@ -9,10 +9,16 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import io.vertx.core.buffer.Buffer;
 
+import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 @Slf4j
 public class MqttService {
   @Getter
   MqttClient mqttClient;
+  static ThreadLocal<LinkedList<String>> cache = new ThreadLocal<>();
+  static ReentrantLock lock = new ReentrantLock();
 
   public MqttService(ApplicationContext applicationContext) {
     mqttClient = MqttClient.create(applicationContext.getVertx());
@@ -38,10 +44,22 @@ public class MqttService {
       });
   }
 
+
   public void publish(ResponseDTO responseDTO) {
     String json = Json.encode(responseDTO);
-//    log.info("send ->>> :{}", json);
-    mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false);
+    try {
+      lock.lock();
+      mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).clientId();
+      LinkedList<String> cacheLocal = new LinkedList<>(cache.get());
+      cacheLocal.forEach(s -> {
+        mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId();
+      });
+      cache.get().removeAll(cacheLocal);
+    } catch (Exception e) {
+      cache.get().add(json);
+    } finally {
+      lock.unlock();
+    }
   }
 
 }
