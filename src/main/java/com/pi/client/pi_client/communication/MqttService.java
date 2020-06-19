@@ -21,7 +21,6 @@ public class MqttService {
   static ReentrantLock lock = new ReentrantLock();
 
   public MqttService(ApplicationContext applicationContext) {
-    cache.set(new LinkedList<>());
     mqttClient = MqttClient.create(applicationContext.getVertx());
     mqttClient.connect(1883, "mqtt.ayouran.com", c -> {
       if (c.succeeded()) {
@@ -51,14 +50,19 @@ public class MqttService {
     try {
       lock.lock();
       mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).clientId();
-      LinkedList<String> cacheLocal = new LinkedList<>(cache.get());
+      LinkedList<String> cacheLocal = new LinkedList<>(getCache());
       cacheLocal.forEach(s -> mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
-      cache.get().removeAll(cacheLocal);
+      getCache().removeAll(cacheLocal);
     } catch (Exception e) {
-      cache.get().add(json);
+      getCache().add(json);
     } finally {
       lock.unlock();
     }
+  }
+
+  LinkedList<String> getCache() {
+    if (null == cache.get()) cache.set(new LinkedList<>());
+    return cache.get();
   }
 
 }
