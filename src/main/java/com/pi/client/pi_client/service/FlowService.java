@@ -34,17 +34,17 @@ public class FlowService {
   /**
    * 开始统计流量
    */
-  void checkShell() {
+  Thread checkShell() {
     log.info("[脚本执行] 开始统计流量");
-    new Thread(() -> ShellUtils.exec("flow/check.sh")).start();
+    return new Thread(() -> ShellUtils.exec("flow/check.sh"));
   }
 
   /**
    * 清除统计流量
    */
-  void clearShell() {
+  Thread clearShell() {
     log.info("[脚本执行] 清除统计流量");
-    new Thread(() -> ShellUtils.exec("flow/clear.sh")).start();
+    return new Thread(() -> ShellUtils.exec("flow/clear.sh"));
   }
 
   /**
@@ -61,7 +61,14 @@ public class FlowService {
       @Override
       public void run() {
         log.info("定时[" + this.getClass().getName() + "]任务开始执行...");
-        checkShell();
+        Thread checkThread = checkShell();
+        checkThread.start();
+        try {
+          checkThread.join();
+        } catch (InterruptedException e) {
+          log.warn("统计流量线程异常", e);
+          checkThread.interrupt();
+        }
         Collection<FlowDTO> flowDTOS = handleFlowText();
         if (flowDTOS.isEmpty()) {
           log.warn("没有需要上报的数据");
@@ -73,7 +80,14 @@ public class FlowService {
           .msg("流量上报")
           .t(flowDTOS)
           .build());
-        clearShell();
+        Thread clearThread = clearShell();
+        clearThread.start();
+        try {
+          clearThread.join();
+        } catch (InterruptedException e) {
+          log.warn("清除流量线程异常", e);
+          clearThread.interrupt();
+        }
       }
     }, new Date(), 1 * 60 * 1000);
   }
