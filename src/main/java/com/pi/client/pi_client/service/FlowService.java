@@ -40,6 +40,14 @@ public class FlowService {
   }
 
   /**
+   * 清除统计流量
+   */
+  void clearShell() {
+    log.info("[脚本执行] 清除统计流量");
+    new Thread(() -> ShellUtils.exec("flow/clear.sh")).start();
+  }
+
+  /**
    * 增加端口流量统计
    */
   void addPort() {
@@ -65,6 +73,7 @@ public class FlowService {
           .msg("流量上报")
           .t(flowDTOS)
           .build());
+        clearShell();
       }
     }, new Date(), 1 * 60 * 1000);
   }
