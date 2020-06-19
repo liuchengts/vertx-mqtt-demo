@@ -21,6 +21,7 @@ public class MqttService {
   static ReentrantLock lock = new ReentrantLock();
 
   public MqttService(ApplicationContext applicationContext) {
+    cache.set(new LinkedList<>());
     mqttClient = MqttClient.create(applicationContext.getVertx());
     mqttClient.connect(1883, "mqtt.ayouran.com", c -> {
       if (c.succeeded()) {
