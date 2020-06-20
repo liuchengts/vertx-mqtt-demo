@@ -2,6 +2,7 @@ package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.commom.FlowDTO;
+import com.pi.client.pi_client.communication.KafkaService;
 import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.model.ResponseDTO;
 import com.pi.client.pi_client.utlis.ShellUtils;
@@ -17,12 +18,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class HeartbeatService {
+  KafkaService kafkaService;
   MqttService mqttService;
   ApplicationContext applicationContext;
 
   public HeartbeatService(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     this.mqttService = applicationContext.getMqttService();
+    this.kafkaService = applicationContext.getKafkaService();
     new Thread(this::task).start();
   }
 

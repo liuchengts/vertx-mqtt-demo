@@ -5,6 +5,7 @@ import com.pi.client.pi_client.model.ResponseDTO;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.json.Json;
 import io.vertx.mqtt.MqttClient;
+import io.vertx.mqtt.MqttClientOptions;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import io.vertx.core.buffer.Buffer;
@@ -21,7 +22,9 @@ public class MqttService {
   static ReentrantLock lock = new ReentrantLock();
 
   public MqttService(ApplicationContext applicationContext) {
-    mqttClient = MqttClient.create(applicationContext.getVertx());
+    MqttClientOptions mqttClientOptions = new MqttClientOptions();
+    mqttClientOptions.setMaxInflightQueue(9999);
+    mqttClient = MqttClient.create(applicationContext.getVertx(), mqttClientOptions);
     mqttClient.connect(1883, "mqtt.ayouran.com", c -> {
       if (c.succeeded()) {
         log.info("Connected to a server");
@@ -31,19 +34,12 @@ public class MqttService {
         log.error("error", c.cause());
       }
     })
-      .subscribeCompletionHandler(sub -> {
-//        log.info("messageId: " + sub.messageId());
-//        log.info("grantedQoSLevels: " + sub.grantedQoSLevels());
-      })
       .publishHandler(pub -> {
-//        log.info("There are new message in topic: " + pub.topicName());
         Buffer buffer = pub.payload();
         log.info("Content(as string) of the message: " + buffer.toString());
-//        log.info("QoS: " + pub.qosLevel());
         applicationContext.getHandleAction().handle(buffer.toJsonObject());
       });
   }
-
 
   public void publish(ResponseDTO responseDTO) {
     String json = Json.encode(responseDTO);

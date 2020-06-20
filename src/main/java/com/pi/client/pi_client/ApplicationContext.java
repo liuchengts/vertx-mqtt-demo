@@ -1,5 +1,6 @@
 package com.pi.client.pi_client;
 
+import com.pi.client.pi_client.communication.KafkaService;
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.communication.HttpService;
@@ -19,6 +20,8 @@ public class ApplicationContext {
   @Getter
   MqttService mqttService;
   @Getter
+  KafkaService kafkaService;
+  @Getter
   HttpService httpService;
   @Getter
   FlowService flowService;
@@ -28,6 +31,10 @@ public class ApplicationContext {
   Vertx vertx;
   @Getter
   String id;
+
+  protected void setKafkaService(KafkaService kafkaService) {
+    this.kafkaService = kafkaService;
+  }
 
   protected void setHeartbeatService(HeartbeatService heartbeatService) {
     this.heartbeatService = heartbeatService;

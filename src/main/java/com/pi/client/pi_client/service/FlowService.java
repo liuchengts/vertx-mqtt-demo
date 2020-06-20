@@ -2,6 +2,7 @@ package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.commom.FlowDTO;
+import com.pi.client.pi_client.communication.KafkaService;
 import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.model.ResponseDTO;
 import com.pi.client.pi_client.utlis.ShellUtils;
@@ -22,12 +23,14 @@ import java.util.stream.Collectors;
 public class FlowService {
   final static String DEVICE_PATH_ROOT = "/root";
   final static String FLOW = "flow.txt";
+  KafkaService kafkaService;
   MqttService mqttService;
   ApplicationContext applicationContext;
 
   public FlowService(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     this.mqttService = applicationContext.getMqttService();
+    this.kafkaService = applicationContext.getKafkaService();
     new Thread(this::task).start();
   }
 
