@@ -77,12 +77,16 @@ public class FlowService {
           log.warn("没有需要上报的数据");
           return;
         }
-        mqttService.publish(ResponseDTO.builder()
+        Boolean fag = mqttService.publish(ResponseDTO.builder()
           .type(ResponseDTO.Type.OK)
           .serviceType(ResponseDTO.ServiceType.FLOW)
           .msg("流量上报")
           .t(flowDTOS)
           .build());
+        if (!fag) {
+          log.warn("消息发送失败，不清空消息列表");
+          return;
+        }
         Thread clearThread = clearShell();
         clearThread.start();
         try {

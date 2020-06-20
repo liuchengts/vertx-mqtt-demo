@@ -3,15 +3,14 @@ package com.pi.client.pi_client.communication;
 import com.pi.client.pi_client.ApplicationContext;
 import com.pi.client.pi_client.model.ResponseDTO;
 import io.netty.handler.codec.mqtt.MqttQoS;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.Json;
 import io.vertx.mqtt.MqttClient;
 import io.vertx.mqtt.MqttClientOptions;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import io.vertx.core.buffer.Buffer;
 
 import java.util.LinkedList;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
@@ -41,7 +40,8 @@ public class MqttService {
       });
   }
 
-  public void publish(ResponseDTO responseDTO) {
+  public Boolean publish(ResponseDTO responseDTO) {
+    Boolean fag = true;
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
@@ -50,12 +50,14 @@ public class MqttService {
       cacheLocal.forEach(s -> mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
       getCache().removeAll(cacheLocal);
     } catch (Exception e) {
+      fag = false;
       getCache().add(json);
       log.warn("mqtt 消息发送失败，当前缓存待发送消息条数:" + getCache().size());
     } finally {
       lock.unlock();
     }
     log.info("当前 mqtt 待发送消息数:" + getCache().size());
+    return fag;
   }
 
   LinkedList<String> getCache() {
