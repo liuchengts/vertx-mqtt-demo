@@ -1,6 +1,5 @@
 package com.pi.client.pi_client;
 
-import com.pi.client.pi_client.communication.KafkaService;
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.communication.HttpService;
