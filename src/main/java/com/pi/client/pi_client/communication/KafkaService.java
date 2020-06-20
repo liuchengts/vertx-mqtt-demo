@@ -79,6 +79,7 @@ public class KafkaService {
       });
     } catch (Exception e) {
       getCache().add(json);
+      log.warn("kafka消息发送失败，当前缓存待发送消息条数:" + getCache().size());
     } finally {
       lock.unlock();
     }

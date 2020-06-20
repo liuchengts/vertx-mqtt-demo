@@ -51,9 +51,11 @@ public class MqttService {
       getCache().removeAll(cacheLocal);
     } catch (Exception e) {
       getCache().add(json);
+      log.warn("mqtt 消息发送失败，当前缓存待发送消息条数:" + getCache().size());
     } finally {
       lock.unlock();
     }
+    log.info("当前 mqtt 待发送消息数:" + getCache().size());
   }
 
   LinkedList<String> getCache() {
