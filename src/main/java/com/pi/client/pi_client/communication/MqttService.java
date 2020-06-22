@@ -46,9 +46,11 @@ public class MqttService {
     try {
       lock.lock();
       mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).clientId();
-      LinkedList<String> cacheLocal = new LinkedList<>(getCache());
-      cacheLocal.forEach(s -> mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
-      getCache().removeAll(cacheLocal);
+      if (!getCache().isEmpty()) {
+        LinkedList<String> cacheLocal = new LinkedList<>(getCache());
+        cacheLocal.forEach(s -> mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
+        getCache().removeAll(cacheLocal);
+      }
     } catch (Exception e) {
       fag = false;
       getCache().add(json);
