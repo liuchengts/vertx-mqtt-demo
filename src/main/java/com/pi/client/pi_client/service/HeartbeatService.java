@@ -34,12 +34,13 @@ public class HeartbeatService {
       @Override
       public void run() {
         log.info("定时[" + this.getClass().getName() + "]任务开始执行...");
-        mqttService.publish(ResponseDTO.builder()
+        Boolean fag = mqttService.publish(ResponseDTO.builder()
           .type(ResponseDTO.Type.OK)
           .serviceType(ResponseDTO.ServiceType.HEARTBEAT)
           .msg("心跳")
           .t(applicationContext.getId())
           .build());
+        log.info("心跳发送结果:" + fag);
       }
     }, new Date(), 1 * 60 * 1000);
   }
