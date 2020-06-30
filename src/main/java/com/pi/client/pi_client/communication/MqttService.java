@@ -41,11 +41,11 @@ public class MqttService {
   }
 
   public Boolean publish(ResponseDTO responseDTO) {
-    Boolean fag = true;
+    Boolean fag;
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
-      mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).clientId();
+      fag = mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
       if (!getCache().isEmpty()) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
         cacheLocal.forEach(s -> mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
