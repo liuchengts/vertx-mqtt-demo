@@ -2,6 +2,7 @@ package com.pi.client.pi_client.utlis;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class FileUtils {
@@ -76,8 +77,8 @@ public class FileUtils {
    * @return 按行返回数据
    * @throws Exception
    */
-  public static List<String> readFile(String path) throws Exception {
-    List<String> list = new ArrayList<>();
+  public static LinkedList<String> readFile(String path) throws Exception {
+    LinkedList<String> list = new LinkedList<>();
     try (FileInputStream inputStream = new FileInputStream(path);
          BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
     ) {

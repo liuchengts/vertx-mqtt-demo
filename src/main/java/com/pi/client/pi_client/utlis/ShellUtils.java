@@ -18,7 +18,11 @@ public class ShellUtils {
   /**
    * 可执行脚本的根目录
    */
-  static final String SHELL_ROOT = "/root/shell-deployment/";
+  public static final String SHELL_ROOT = "/root/shell-deployment/";
+  /**
+   * 临时文件目录
+   */
+  public static final String SHELL_HOME = "/home/";
 
   public static String getPathTmp(String shellPath) {
     return Thread.class.getResource("/" + shellPath).getFile();

@@ -52,11 +52,14 @@ public class PiApplication extends AbstractVerticle {
     } catch (Exception e) {
       log.error("MqttService error", e);
     }
+
+
 //    try {
 //      applicationContext.setKafkaService(new KafkaService(applicationContext));
 //    } catch (Exception e) {
 //      log.error("KafkaService error", e);
 //    }
+
     try {
       applicationContext.setHttpService(new HttpService(applicationContext));
     } catch (Exception e) {
