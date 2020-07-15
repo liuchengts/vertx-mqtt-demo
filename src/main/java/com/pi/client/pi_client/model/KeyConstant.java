@@ -35,4 +35,5 @@ public interface KeyConstant {
   String NET = "NET"; // 网络相关
   String FLOW = "FLOW"; //流量相关
   String SHELL_PULL = "SHELL_PULL"; //更新脚本
+  String RINETD = "RINETD"; //转发
 }

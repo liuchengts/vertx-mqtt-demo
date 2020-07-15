@@ -36,8 +36,8 @@ public class HandleAction {
    * @param jsonObject 入参
    * @return 出参
    */
-  public ResponseDTO<String> handle(JsonObject jsonObject) {
-    ResponseDTO<String> responseDTO = new ResponseDTO<>();
+  public ResponseDTO<Object> handle(JsonObject jsonObject) {
+    ResponseDTO<Object> responseDTO = new ResponseDTO<>();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
     String device_no_local = applicationContext.getId();
@@ -63,6 +63,8 @@ public class HandleAction {
       flowHandle.handle(jsonObject);
     } else if (KeyConstant.SHELL_PULL.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       shellHandle.handle(jsonObject);
+    } else if (KeyConstant.RINETD.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      //todo 转发
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");
