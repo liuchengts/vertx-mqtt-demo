@@ -1,6 +1,7 @@
 package com.pi.client.pi_client.communication;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.Config;
 import com.pi.client.pi_client.model.ResponseDTO;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.buffer.Buffer;
@@ -17,17 +18,19 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MqttService {
   @Getter
   MqttClient mqttClient;
+  Config config;
   static ThreadLocal<LinkedList<String>> cache = new ThreadLocal<>();
   static ReentrantLock lock = new ReentrantLock();
 
   public MqttService(ApplicationContext applicationContext) {
+    this.config = applicationContext.getConfig();
     MqttClientOptions mqttClientOptions = new MqttClientOptions();
     mqttClientOptions.setMaxInflightQueue(9999);
     mqttClient = MqttClient.create(applicationContext.getVertx(), mqttClientOptions);
-    mqttClient.connect(1883, "mqtt.ayouran.com", c -> {
+    mqttClient.connect(config.getMqttPort(), config.getMqttIp(), c -> {
       if (c.succeeded()) {
         log.info("Connected to a server");
-        mqttClient.subscribe("lot-admin", MqttQoS.AT_LEAST_ONCE.value());
+        mqttClient.subscribe(config.getMqttSubscribe(), MqttQoS.AT_LEAST_ONCE.value());
       } else {
         log.error("Failed to connect to a server");
         log.error("error", c.cause());
@@ -45,10 +48,10 @@ public class MqttService {
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
-      fag = mqttClient.publish("lot-pi", Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
+      fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
       if (!getCache().isEmpty()) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
-        cacheLocal.forEach(s -> mqttClient.publish("lot-pi", Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
+        cacheLocal.forEach(s -> mqttClient.publish(config.getMqttPublish(), Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
         getCache().removeAll(cacheLocal);
       }
     } catch (Exception e) {

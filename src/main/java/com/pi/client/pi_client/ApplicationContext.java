@@ -16,6 +16,8 @@ public class ApplicationContext {
   @Getter
   List<String> processArgs;
   @Getter
+  Config config;
+  @Getter
   HandleAction handleAction;
   @Getter
   MqttService mqttService;
@@ -67,5 +69,9 @@ public class ApplicationContext {
 
   protected void setId(String id) {
     this.id = id;
+  }
+
+  protected void setConfig(Config config) {
+    this.config = config;
   }
 }

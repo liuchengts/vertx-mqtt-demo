@@ -1,6 +1,7 @@
 package com.pi.client.pi_client.communication;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.Config;
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.utlis.FileUtils;
 import com.pi.client.pi_client.utlis.ShellUtils;
@@ -18,14 +19,11 @@ import java.util.List;
 public class HttpService {
   @Getter
   HttpServer httpServer;
-  static int port = 80;
-  //  static String FILE_PATH = "/Users/liucheng/it/lc/shell-deployment";
-  //  static String FILE_HOME_PATH = "/Users/liucheng/it/lc";
-  static String FILE_PATH = ShellUtils.SHELL_ROOT;
-  static String FILE_HOME_PATH = ShellUtils.SHELL_HOME;
+  Config config;
 
   public HttpService(ApplicationContext applicationContext) {
     this.httpServer = applicationContext.getVertx().createHttpServer();
+    this.config = applicationContext.getConfig();
     Router router = Router.router(applicationContext.getVertx());
     router.get("/index").handler(req -> req.response()
       .putHeader("content-type", "application/json")
@@ -34,7 +32,7 @@ public class HttpService {
       .putHeader("content-type", "application/json")
       .end(Json.encode(applicationContext.getHandleAction().handle(body.toJsonObject())))));
     router.get("/pac/*").handler(req -> {
-      String fileUrl = FILE_PATH + req.request().path();
+      String fileUrl = config.getPathShellRoot() + req.request().path();
       log.info("fileUrl:{}", fileUrl);
       try {
         LinkedList<String> fileList = FileUtils.readFile(fileUrl);
@@ -42,7 +40,7 @@ public class HttpService {
           log.error("读取文件失败,文件不存在 fileUrl:{}", fileUrl);
           req.response().end("Failed to read file, file does not exist");
         }
-        if (!"//pac".equals(fileList.get(0))) {
+        if (!config.getPacPrefix().equals(fileList.get(0))) {
           log.error("写入文件失败,文件被篡改 len 0 :{}", fileList.get(0));
           req.response().end("Writing to file failed. File has been tampered with");
         }
@@ -52,7 +50,7 @@ public class HttpService {
         fileList.remove(1);
         fileList.add(1, "var socks_proxy = '" + socksProxy + "';");
         fileList.add(1, "var http_proxy = '" + httpProxy + "';");
-        String outFile = FILE_HOME_PATH + fileUrl;
+        String outFile = config.getPathHome() + fileUrl;
         FileUtils.outFile(outFile, fileList);
         req.response().sendFile(outFile);
       } catch (Exception e) {
@@ -62,9 +60,9 @@ public class HttpService {
     });
     this.httpServer
       .requestHandler(router)
-      .listen(port, http -> {
+      .listen(config.getHttpServerPort(), http -> {
         if (http.succeeded()) {
-          log.info("HTTP server started on port:{}", port);
+          log.info("HTTP server started on port:{}", config.getHttpServerPort());
         } else {
           log.error("error", http.cause());
         }

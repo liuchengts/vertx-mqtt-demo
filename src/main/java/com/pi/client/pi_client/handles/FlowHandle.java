@@ -1,6 +1,7 @@
 package com.pi.client.pi_client.handles;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.Config;
 import com.pi.client.pi_client.model.KeyConstant;
 import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.utlis.FileUtils;
@@ -11,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlowHandle {
   MqttService mqttService;
-  static final String CONFIG_PATH = "/etc/v2ray/config.json";
-  static final String TMP_CONFIG_NAME = ".tmp";
+  Config config;
 
   public FlowHandle(ApplicationContext applicationContext) {
     this.mqttService = applicationContext.getMqttService();
+    this.config = applicationContext.getConfig();
   }
 
 
@@ -24,7 +25,7 @@ public class FlowHandle {
    */
   void restartShell() {
     log.info("[脚本执行] 应用流量文件");
-    new Thread(() -> ShellUtils.exec("flow/v2ray.sh")).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellV2ray())).start();
   }
 
   /**
@@ -35,7 +36,7 @@ public class FlowHandle {
   public void handle(JsonObject jsonObject) {
     String data = jsonObject.getString(KeyConstant.DATA);
     try {
-      FileUtils.outFile(CONFIG_PATH + TMP_CONFIG_NAME, data);
+      FileUtils.outFile(config.getPathV2rayConfig() + config.getV2rayConfigTmp(), data);
       restartShell();
     } catch (Exception e) {
       log.error("指令处理失败", e);

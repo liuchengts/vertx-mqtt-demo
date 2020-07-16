@@ -22,7 +22,7 @@ public class HandleAction {
     this.applicationContext = applicationContext;
     wifiHandle = new WifiHandle(applicationContext);
     flowHandle = new FlowHandle(applicationContext);
-    shellHandle = new ShellHandle();
+    shellHandle = new ShellHandle(applicationContext);
   }
 
   public void close() {
@@ -65,6 +65,8 @@ public class HandleAction {
       shellHandle.handle(jsonObject);
     } else if (KeyConstant.RINETD.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       //todo 转发
+    } else if (KeyConstant.PAC_FILE.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      //todo pac文件
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");

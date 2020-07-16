@@ -31,16 +31,17 @@ public class ShellUtils {
   /**
    * 执行shell并且打印执行结果
    *
-   * @param path 要执行的脚本路径
+   * @param shellRoot 要执行的脚本的根路径
+   * @param path      要执行的脚本路径
    * @return 按行返回执行结果
    * @throws IOException
    */
-  public static List<String> exec(String path, String... args) {
-    if (!File.separator.equals(path.substring(0, 1))) {
+  public static List<String> exec(String shellRoot, String path, String... args) {
+//    if (!File.separator.equals(path.substring(0, 1))) {
 //      path = getPathTmp(path);
 //      path= tmpShellCopy(path);
-      path = SHELL_ROOT + path;
-    }
+//    }
+    path = shellRoot + path;
     List<String> list = new ArrayList<>();
     String cmd = "bash " + path;
     if (null != args) {
@@ -51,7 +52,7 @@ public class ShellUtils {
     int status = 0;
     Process process = null;
     try {
-      process = Runtime.getRuntime().exec(cmd, envp, new File(SHELL_ROOT));
+      process = Runtime.getRuntime().exec(cmd, envp, new File(shellRoot));
       status = process.waitFor();
     } catch (Exception e) {
       log.error("exec error", e);
@@ -80,22 +81,22 @@ public class ShellUtils {
     return list;
   }
 
-  /**
-   * 将本地jar中的shell文件 复制一份到liunx文件目录下再执行
-   *
-   * @param tmpShellPath 本地jar中的shell文件路径
-   * @return 复制后的文件路径
-   */
-  static String tmpShellCopy(String tmpShellPath) {
-    //本地jar包含的文件
-    String name = tmpShellPath.substring(tmpShellPath.lastIndexOf(File.separator) + 1);
-    File tmpFile = new File("/tmp/shell/" + name);
-    //将要执行的本地文件
-    try {
-      FileUtils.outFile(tmpFile.getPath(), FileUtils.readFile(getPathTmp(tmpShellPath)));
-    } catch (Exception e) {
-      throw new RuntimeException("shell文件读取转换异常", e);
-    }
-    return tmpFile.getPath();
-  }
+//  /**
+//   * 将本地jar中的shell文件 复制一份到liunx文件目录下再执行
+//   *
+//   * @param tmpShellPath 本地jar中的shell文件路径
+//   * @return 复制后的文件路径
+//   */
+//  static String tmpShellCopy(String tmpShellPath) {
+//    //本地jar包含的文件
+//    String name = tmpShellPath.substring(tmpShellPath.lastIndexOf(File.separator) + 1);
+//    File tmpFile = new File("/tmp/shell/" + name);
+//    //将要执行的本地文件
+//    try {
+//      FileUtils.outFile(tmpFile.getPath(), FileUtils.readFile(getPathTmp(tmpShellPath)));
+//    } catch (Exception e) {
+//      throw new RuntimeException("shell文件读取转换异常", e);
+//    }
+//    return tmpFile.getPath();
+//  }
 }

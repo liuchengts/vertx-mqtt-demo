@@ -36,4 +36,5 @@ public interface KeyConstant {
   String FLOW = "FLOW"; //流量相关
   String SHELL_PULL = "SHELL_PULL"; //更新脚本
   String RINETD = "RINETD"; //转发
+  String PAC_FILE = "PAC_FILE"; //pac文件操作
 }

@@ -36,8 +36,10 @@ public class PiApplication extends AbstractVerticle {
 
   void init() {
     log.info("propertyNames:{}", System.getProperties().stringPropertyNames());
-    applicationContext.setId(System.getProperty(ARGS_KEY));
+    applicationContext.setConfig(new Config(dev));
+    applicationContext.setId(System.getProperty(applicationContext.getConfig().getArgsKey()));
     if (StringUtil.isNullOrEmpty(applicationContext.getId())) throw new RuntimeException("必要的启动参数不存在");
+
     if (!dev) {
       applicationContext.setProcessArgs(processArgs());
       log.info("processArgs:{}", applicationContext.getProcessArgs());

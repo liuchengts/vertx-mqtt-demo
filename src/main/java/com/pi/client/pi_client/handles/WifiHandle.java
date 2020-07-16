@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
+@Deprecated
 @Slf4j
 public class WifiHandle {
   MqttService mqttService;
@@ -85,7 +85,7 @@ public class WifiHandle {
     contents.add("auto eth0\r\n");
     contents.add("iface eth0 inet dhcp\r\n");
     FileUtils.outFile(KeyConstant.INTERFACES_PATH, contents);
-    ShellUtils.exec(KeyConstant.SHELL_PATH_WIFI);
+//    ShellUtils.exec(KeyConstant.SHELL_PATH_WIFI);
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.pi.client.pi_client.communication;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.Config;
 import com.pi.client.pi_client.model.ResponseDTO;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.buffer.Buffer;
@@ -26,8 +27,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 public class KafkaService {
+  Config config;
   @Getter
   KafkaConsumer<String, String> consumer;
+  @Getter
   KafkaProducer<String, String> producer;
   static ThreadLocal<LinkedList<String>> cache = new ThreadLocal<>();
   static ReentrantLock lock = new ReentrantLock();
@@ -35,22 +38,25 @@ public class KafkaService {
   static Properties producerConfig = new Properties();
 
   static {
-    consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka.ayouran.com:9092");
+
     consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, JsonObjectDeserializer.class);
     consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonObjectDeserializer.class);
     consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "lot_group");
     consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     consumerConfig.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
 
-    producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka.ayouran.com:9092");
+
     producerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, JsonObjectDeserializer.class);
     producerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonObjectDeserializer.class);
     producerConfig.put(ProducerConfig.ACKS_CONFIG, "1");
   }
 
   public KafkaService(ApplicationContext applicationContext) {
+    this.config = applicationContext.getConfig();
+    consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getKafkaIpAndPort());
+    producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getKafkaIpAndPort());
     consumer = KafkaConsumer.create(applicationContext.getVertx(), consumerConfig);
-    consumer.subscribe("lot-admin");
+    consumer.subscribe(config.getKafkaSubscribe());
     consumer.handler(record -> {
       log.info("Processing key=" + record.key() + ",value=" + record.value() +
         ",partition=" + record.partition() + ",offset=" + record.offset());
@@ -64,12 +70,12 @@ public class KafkaService {
     String json = Json.encode(responseDTO);
     lock.lock();
     try {
-      KafkaProducerRecord<String, String> record = KafkaProducerRecord.create("lot-pi", json);
+      KafkaProducerRecord<String, String> record = KafkaProducerRecord.create(config.getKafkaPublish(), json);
       producer.write(record, done -> {
         if (done.succeeded()) {
           LinkedList<String> cacheLocal = new LinkedList<>(getCache());
           cacheLocal.forEach(s -> {
-            producer.write(KafkaProducerRecord.create("lot-pi", json));
+            producer.write(KafkaProducerRecord.create(config.getKafkaPublish(), json));
             getCache().remove(s);
           });
         } else {

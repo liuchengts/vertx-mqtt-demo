@@ -1,13 +1,19 @@
 package com.pi.client.pi_client.handles;
 
+import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.Config;
 import com.pi.client.pi_client.utlis.ShellUtils;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ShellHandle {
+  ApplicationContext applicationContext;
+  Config config;
 
-  public ShellHandle() {
+  public ShellHandle(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+    this.config = applicationContext.getConfig();
     updateShell();
   }
 
@@ -17,7 +23,7 @@ public class ShellHandle {
    */
   public void updateShell() {
     log.info("[脚本执行] 更新脚本");
-    new Thread(() -> ShellUtils.exec("git-pull.sh")).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellGitPull())).start();
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.pi.client.pi_client.service;
 
 import com.pi.client.pi_client.ApplicationContext;
+import com.pi.client.pi_client.Config;
 import com.pi.client.pi_client.commom.FlowDTO;
 import com.pi.client.pi_client.communication.KafkaService;
 import com.pi.client.pi_client.communication.MqttService;
@@ -21,16 +22,16 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class FlowService {
-  final static String DEVICE_PATH_ROOT = "/root";
-  final static String FLOW = "flow.txt";
   KafkaService kafkaService;
   MqttService mqttService;
   ApplicationContext applicationContext;
+  Config config;
 
   public FlowService(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     this.mqttService = applicationContext.getMqttService();
     this.kafkaService = applicationContext.getKafkaService();
+    this.config = applicationContext.getConfig();
     new Thread(this::task).start();
   }
 
@@ -39,7 +40,7 @@ public class FlowService {
    */
   Thread checkShell() {
     log.info("[脚本执行] 开始统计流量");
-    return new Thread(() -> ShellUtils.exec("flow/check.sh"));
+    return new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowCheck()));
   }
 
   /**
@@ -47,7 +48,7 @@ public class FlowService {
    */
   Thread clearShell() {
     log.info("[脚本执行] 清除统计流量");
-    return new Thread(() -> ShellUtils.exec("flow/clear.sh"));
+    return new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowClear()));
   }
 
   /**
@@ -55,7 +56,7 @@ public class FlowService {
    */
   void addPort() {
     log.info("[脚本执行] 增加端口流量统计");
-    new Thread(() -> ShellUtils.exec("flow/addPort.sh", "12028", "12040")).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "12028", "12040")).start();
   }
 
   void task() {
@@ -211,7 +212,7 @@ public class FlowService {
    * @return 返回文件
    */
   File getFile() {
-    File file = new File(DEVICE_PATH_ROOT + File.separator + FLOW);
+    File file = new File(config.getPathHome() + config.getFlowFile());
     if (!file.exists()) return null;
     return file;
   }
