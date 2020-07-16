@@ -32,27 +32,10 @@ public class HttpService {
       .putHeader("content-type", "application/json")
       .end(Json.encode(applicationContext.getHandleAction().handle(body.toJsonObject())))));
     router.get("/pac/*").handler(req -> {
-      String fileUrl = config.getPathShellRoot() + req.request().path();
+      String fileUrl = config.getPathHome() + config.getPathPacHome() + req.request().path();
       log.info("fileUrl:{}", fileUrl);
       try {
-        LinkedList<String> fileList = FileUtils.readFile(fileUrl);
-        if (fileList.isEmpty()) {
-          log.error("读取文件失败,文件不存在 fileUrl:{}", fileUrl);
-          req.response().end("Failed to read file, file does not exist");
-        }
-        if (!config.getPacPrefix().equals(fileList.get(0))) {
-          log.error("写入文件失败,文件被篡改 len 0 :{}", fileList.get(0));
-          req.response().end("Writing to file failed. File has been tampered with");
-        }
-        String httpProxy = "localhost:1087";
-        String socksProxy = "localhost:1086";
-        fileList.remove(1);
-        fileList.remove(1);
-        fileList.add(1, "var socks_proxy = '" + socksProxy + "';");
-        fileList.add(1, "var http_proxy = '" + httpProxy + "';");
-        String outFile = config.getPathHome() + fileUrl;
-        FileUtils.outFile(outFile, fileList);
-        req.response().sendFile(outFile);
+        req.response().sendFile(fileUrl);
       } catch (Exception e) {
         log.error("读取文件失败 fileUrl:{}", fileUrl, e);
         req.response().end("Failed to read file ,:{}", e.getMessage());

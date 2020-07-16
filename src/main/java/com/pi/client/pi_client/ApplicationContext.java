@@ -71,7 +71,7 @@ public class ApplicationContext {
     this.id = id;
   }
 
-  protected void setConfig(Config config) {
+  public void setConfig(Config config) {
     this.config = config;
   }
 }

@@ -89,4 +89,15 @@ public class FileUtils {
     }
     return list;
   }
+
+  /**
+   * 删除文件
+   * 也可以删除文件目录，谨慎使用
+   *
+   * @param path 文件路径
+   */
+  public static void remove(String path) {
+    File file = new File(path);
+    if (file.exists()) file.delete();
+  }
 }

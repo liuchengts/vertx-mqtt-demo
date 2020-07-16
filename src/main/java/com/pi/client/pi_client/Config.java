@@ -3,6 +3,10 @@ package com.pi.client.pi_client;
 
 public class Config {
   /**
+   * 外网ip
+   */
+  private String networkIp;
+  /**
    * 启动指定的参数值
    */
   private String argsKey = "deviceNo";
@@ -21,25 +25,30 @@ public class Config {
 
   /**
    * 流量文件名
+   * pathHome
    */
   private String flowFile = "flow.txt";
   /**
    * 增加端口统计流量的相对脚本
+   * pathShellRoot
    */
   private String shellFlowAddPort = "flow/addPort.sh";
 
   /**
    * 统计流量的相对脚本
+   * pathShellRoot
    */
   private String shellFlowCheck = "flow/check.sh";
 
   /**
    * 清除统计流量的相对脚本
+   * pathShellRoot
    */
   private String shellFlowClear = "flow/clear.sh";
 
   /**
    * 更新shell项目的相对脚本
+   * pathShellRoot
    */
   private String shellGitPull = "git-pull.sh";
 
@@ -50,13 +59,14 @@ public class Config {
 
   /**
    * 重启v2ray的相对脚本
+   * pathShellRoot
    */
   private String shellV2ray = "flow/v2ray.sh";
 
   /**
-   * v2ray临时配置文件的后缀
+   * 临时配置文件的后缀
    */
-  private String v2rayConfigTmp = ".tmp";
+  private String configTmp = ".tmp";
   /**
    * mqtt地址
    */
@@ -93,6 +103,53 @@ public class Config {
    * PAC文件的第一行
    */
   private String pacPrefix = "//pac";
+  /**
+   * pac 临时文件目录
+   * pathHome
+   */
+  private String pathPacHome = "pac/";
+  /**
+   * rinetd的配置文件路径
+   */
+  private String pathRinetdConfig = "/etc/rinetd/rinetd.conf";
+
+  /**
+   * rinetd的配置文件路径
+   * pathShellRoot
+   */
+  private String shellRinetd = "rinetd/rinetd.sh";
+
+  /**
+   * pac模板文件路径
+   * pathShellRoot
+   */
+  private String pathPacTemplate = "pac/template.pac";
+
+  /**
+   * 获取外网ip的相对脚本
+   * pathShellRoot
+   */
+  private String shellIp = "ip.sh";
+
+  public String getPathPacHome() {
+    return pathPacHome;
+  }
+
+  public String getShellIp() {
+    return shellIp;
+  }
+
+  public String getPathPacTemplate() {
+    return pathPacTemplate;
+  }
+
+  public String getShellRinetd() {
+    return shellRinetd;
+  }
+
+  public String getPathRinetdConfig() {
+    return pathRinetdConfig;
+  }
 
   public Boolean getDev() {
     return dev;
@@ -134,8 +191,8 @@ public class Config {
     return shellV2ray;
   }
 
-  public String getV2rayConfigTmp() {
-    return v2rayConfigTmp;
+  public String getConfigTmp() {
+    return configTmp;
   }
 
   public String getMqttIp() {
@@ -178,8 +235,8 @@ public class Config {
     return argsKey;
   }
 
-  protected void setDev(Boolean dev) {
-    this.dev = dev;
+  public String getNetworkIp() {
+    return networkIp;
   }
 
   protected void setPathShellRoot(String pathShellRoot) {
@@ -190,8 +247,8 @@ public class Config {
     this.pathHome = pathHome;
   }
 
-  protected void setPathV2rayConfig(String pathV2rayConfig) {
-    this.pathV2rayConfig = pathV2rayConfig;
+  public void setNetworkIp(String networkIp) {
+    this.networkIp = networkIp;
   }
 
   protected Config() {

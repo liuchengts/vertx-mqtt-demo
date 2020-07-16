@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 public class PiApplication extends AbstractVerticle {
   static ApplicationContext applicationContext = new ApplicationContext();
   static boolean dev = false;
-  //启动指定的参数值
-  static final String ARGS_KEY = "deviceNo";
 
   public static void main(String[] args) {
     dev = true;
@@ -25,8 +23,12 @@ public class PiApplication extends AbstractVerticle {
   @Override
   public void start() {
     log.info("开始启动 *************************运行模式:{}", (dev ? "本地开发模式" : "jar运行模式"));
-    init();
-    service();
+    try {
+      init();
+      service();
+    } catch (Exception e) {
+      log.error("启动异常", e);
+    }
   }
 
   @Override
@@ -34,17 +36,20 @@ public class PiApplication extends AbstractVerticle {
     applicationContext.getHandleAction().close();
   }
 
-  void init() {
+  void init() throws Exception {
     log.info("propertyNames:{}", System.getProperties().stringPropertyNames());
-    applicationContext.setConfig(new Config(dev));
-    applicationContext.setId(System.getProperty(applicationContext.getConfig().getArgsKey()));
+    Config config = new Config(dev);
+    applicationContext.setId(System.getProperty(config.getArgsKey()));
     if (StringUtil.isNullOrEmpty(applicationContext.getId())) throw new RuntimeException("必要的启动参数不存在");
-
     if (!dev) {
       applicationContext.setProcessArgs(processArgs());
       log.info("processArgs:{}", applicationContext.getProcessArgs());
+    } else {
+      config.setPathShellRoot("/Users/liucheng/it/lc/shell-deployment/");
+      config.setPathHome("/Users/liucheng/it/lc/");
     }
     applicationContext.setVertx(vertx);
+    applicationContext.setConfig(config);
     applicationContext.setHandleAction(new HandleAction(applicationContext));
   }
 

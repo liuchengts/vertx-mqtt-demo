@@ -17,12 +17,16 @@ public class HandleAction {
   WifiHandle wifiHandle;
   FlowHandle flowHandle;
   ShellHandle shellHandle;
+  RinetdHandle rinetdHandle;
+  PacHandle pacHandle;
 
-  public HandleAction(ApplicationContext applicationContext) {
+  public HandleAction(ApplicationContext applicationContext) throws Exception {
     this.applicationContext = applicationContext;
+    shellHandle = new ShellHandle(applicationContext);
     wifiHandle = new WifiHandle(applicationContext);
     flowHandle = new FlowHandle(applicationContext);
-    shellHandle = new ShellHandle(applicationContext);
+    rinetdHandle = new RinetdHandle(applicationContext);
+    pacHandle = new PacHandle(applicationContext);
   }
 
   public void close() {
@@ -64,9 +68,9 @@ public class HandleAction {
     } else if (KeyConstant.SHELL_PULL.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       shellHandle.handle(jsonObject);
     } else if (KeyConstant.RINETD.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
-      //todo 转发
+      rinetdHandle.handle(jsonObject);
     } else if (KeyConstant.PAC_FILE.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
-      //todo pac文件
+      pacHandle.handle(jsonObject);
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");

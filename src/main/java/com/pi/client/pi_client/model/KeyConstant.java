@@ -19,18 +19,28 @@ public interface KeyConstant {
   /**
    * keys
    */
-  String IP_ORIGIN = "origin";
+
   String SSID = "ssid";
   String PWD = "pwd";
   String WIFI = "wifi";
   String CLOSE = "close";
+
+  //公共key
   String TYPE = "type";
   String DATA = "t";
   String SERVICE_TYPE = "serviceType";
   String DEVICE_NO = "deviceNo";
+  String IP_ORIGIN = "origin";
+  //pac
+  String PAC_DEL = "del";
+  String PAC_SOCKS_PORT = "socksPort";
+  String PAC_HTTP_PORT = "httpPort";
+  String PAC_NAME = "pacName";
+
   // Type
   String OK = "OK";
   String ERROR = "ERROR";
+
   // ServiceType
   String NET = "NET"; // 网络相关
   String FLOW = "FLOW"; //流量相关
