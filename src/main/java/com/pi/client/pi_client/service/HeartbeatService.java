@@ -26,7 +26,11 @@ public class HeartbeatService {
     this.applicationContext = applicationContext;
     this.mqttService = applicationContext.getMqttService();
     this.kafkaService = applicationContext.getKafkaService();
-    new Thread(this::task).start();
+    if (this.applicationContext.getConfig().getDev()) {
+      log.info("本地模式不启动任务...");
+    } else {
+      new Thread(this::task).start();
+    }
   }
 
   void task() {
