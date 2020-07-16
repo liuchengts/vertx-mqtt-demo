@@ -54,7 +54,6 @@ public class ShellHandle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
-//    String data = jsonObject.getString(KeyConstant.DATA);
     try {
       updateShell();
     } catch (Exception e) {
