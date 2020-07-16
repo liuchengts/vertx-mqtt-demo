@@ -45,7 +45,7 @@ public class ShellHandle {
    */
   public void updateShell() {
     log.info("[脚本执行] 更新脚本");
-    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellGitPull())).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellGitPull()), config.getPathShellRoot()).start();
   }
 
   /**
