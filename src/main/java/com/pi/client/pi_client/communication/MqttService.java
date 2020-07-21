@@ -50,7 +50,7 @@ public class MqttService {
   }
 
   public Boolean publish(ResponseDTO responseDTO) {
-    boolean fag = false;
+    boolean fag;
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
