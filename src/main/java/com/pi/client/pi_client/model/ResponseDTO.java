@@ -39,6 +39,6 @@ public class ResponseDTO<T> {
   }
 
   public enum ServiceType {
-    NET, FLOW, HEARTBEAT
+    NET, FLOW, HEARTBEAT, PORT
   }
 }

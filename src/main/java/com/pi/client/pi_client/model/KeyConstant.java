@@ -36,15 +36,18 @@ public interface KeyConstant {
   String PAC_SOCKS_PORT = "socksPort";
   String PAC_HTTP_PORT = "httpPort";
   String PAC_NAME = "pacName";
-
+  //port
+  String PORT_OPERATION_ADD = "add";
+  String PORT_OPERATION_DEL = "del";
   // Type
   String OK = "OK";
   String ERROR = "ERROR";
 
   // ServiceType
   String NET = "NET"; // 网络相关
-  String FLOW = "FLOW"; //流量相关
+  String V2 = "V2"; //V2相关
   String SHELL_PULL = "SHELL_PULL"; //更新脚本
   String RINETD = "RINETD"; //转发
   String PAC_FILE = "PAC_FILE"; //pac文件操作
+  String PORT = "PORT"; //端口统计
 }

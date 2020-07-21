@@ -60,7 +60,7 @@ public class FlowService {
    */
   void addPort() {
     log.info("[脚本执行] 增加端口流量统计");
-    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "12028", "12100")).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "12000", "12100")).start();
   }
 
   void task() {
@@ -77,6 +77,7 @@ public class FlowService {
           log.warn("统计流量线程异常", e);
           checkThread.interrupt();
         }
+        getPort();
         Collection<FlowDTO> flowDTOS = handleFlowText();
         if (flowDTOS.isEmpty()) {
           log.warn("没有需要上报的数据");
@@ -219,5 +220,21 @@ public class FlowService {
     File file = new File(config.getPathHome() + config.getFlowFile());
     if (!file.exists()) return null;
     return file;
+  }
+
+  /**
+   * 获取额外的需要统计流量的端口
+   */
+  void getPort() {
+    if (applicationContext.isPacPort()) return;
+    Boolean fag = mqttService.publish(ResponseDTO.builder()
+      .type(ResponseDTO.Type.OK)
+      .serviceType(ResponseDTO.ServiceType.PORT)
+      .msg("请求下发额外的流量统计端口")
+      .t(applicationContext.getId())
+      .build());
+    if (!fag) {
+      log.warn("发送获取额外需要统计的流量端口失败");
+    }
   }
 }

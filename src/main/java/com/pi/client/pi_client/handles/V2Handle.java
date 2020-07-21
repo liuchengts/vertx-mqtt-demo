@@ -10,10 +10,10 @@ import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FlowHandle {
+public class V2Handle {
   Config config;
 
-  public FlowHandle(ApplicationContext applicationContext) {
+  public V2Handle(ApplicationContext applicationContext) {
     this.config = applicationContext.getConfig();
   }
 

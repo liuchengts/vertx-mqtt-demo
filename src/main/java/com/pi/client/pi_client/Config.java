@@ -33,7 +33,11 @@ public class Config {
    * pathShellRoot
    */
   private String shellFlowAddPort = "flow/addPort.sh";
-
+  /**
+   * 删除端口统计流量的相对脚本
+   * pathShellRoot
+   */
+  private String shellFlowDelPort = "flow/delPort.sh";
   /**
    * 统计流量的相对脚本
    * pathShellRoot
@@ -237,6 +241,10 @@ public class Config {
 
   public String getNetworkIp() {
     return networkIp;
+  }
+
+  public String getShellFlowDelPort() {
+    return shellFlowDelPort;
   }
 
   protected void setPathShellRoot(String pathShellRoot) {

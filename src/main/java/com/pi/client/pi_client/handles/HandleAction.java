@@ -15,18 +15,20 @@ public class HandleAction {
   @Getter
   ApplicationContext applicationContext;
   WifiHandle wifiHandle;
-  FlowHandle flowHandle;
+  V2Handle v2Handle;
   ShellHandle shellHandle;
   RinetdHandle rinetdHandle;
   PacHandle pacHandle;
+  PortHandle portHandle;
 
   public HandleAction(ApplicationContext applicationContext) throws Exception {
     this.applicationContext = applicationContext;
     shellHandle = new ShellHandle(applicationContext);
     wifiHandle = new WifiHandle(applicationContext);
-    flowHandle = new FlowHandle(applicationContext);
+    v2Handle = new V2Handle(applicationContext);
     rinetdHandle = new RinetdHandle(applicationContext);
     pacHandle = new PacHandle(applicationContext);
+    portHandle = new PortHandle(applicationContext);
   }
 
   public void close() {
@@ -63,14 +65,16 @@ public class HandleAction {
       responseDTO = wifiHandle.handle(jsonObject);
     } else if (KeyConstant.CLOSE.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       close();
-    } else if (KeyConstant.FLOW.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
-      flowHandle.handle(jsonObject);
+    } else if (KeyConstant.V2.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      v2Handle.handle(jsonObject);
     } else if (KeyConstant.SHELL_PULL.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       shellHandle.handle(jsonObject);
     } else if (KeyConstant.RINETD.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       rinetdHandle.handle(jsonObject);
     } else if (KeyConstant.PAC_FILE.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       pacHandle.handle(jsonObject);
+    } else if (KeyConstant.PORT.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      portHandle.handle(jsonObject);
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");

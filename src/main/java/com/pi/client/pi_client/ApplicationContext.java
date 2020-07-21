@@ -7,7 +7,9 @@ import com.pi.client.pi_client.communication.HttpService;
 import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.service.HeartbeatService;
 import io.vertx.core.Vertx;
+import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class ApplicationContext {
   Vertx vertx;
   @Getter
   String id;
+  @Getter
+  @Setter
+  boolean pacPort;
 
   protected void setKafkaService(KafkaService kafkaService) {
     this.kafkaService = kafkaService;
