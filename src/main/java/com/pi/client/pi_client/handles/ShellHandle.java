@@ -18,7 +18,7 @@ public class ShellHandle {
   ApplicationContext applicationContext;
   Config config;
 
-  public ShellHandle(ApplicationContext applicationContext) throws Exception {
+  public ShellHandle(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     this.config = applicationContext.getConfig();
     updateShell();
@@ -29,15 +29,14 @@ public class ShellHandle {
   /**
    * 获取外网ip脚本
    */
-  public void networkIp() throws InterruptedException {
+  public void networkIp() {
     log.info("[脚本执行] 获取外网ip脚本");
     Thread thread = new Thread(() -> {
       List<String> list = ShellUtils.exec(config.getPathShellRoot(), config.getShellIp());
       this.config.setNetworkIp(Json.decodeValue(String.join("", list), HashMap.class).get(KeyConstant.IP_ORIGIN).toString());
+      applicationContext.setConfig(this.config);
     });
     thread.start();
-    thread.join();
-    applicationContext.setConfig(this.config);
   }
 
   /**

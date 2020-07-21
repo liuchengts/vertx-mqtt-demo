@@ -251,6 +251,18 @@ public class Config {
     this.networkIp = networkIp;
   }
 
+  public void setMqttIp(String mqttIp) {
+    this.mqttIp = mqttIp;
+  }
+
+  public void setPathV2rayConfig(String pathV2rayConfig) {
+    this.pathV2rayConfig = pathV2rayConfig;
+  }
+
+  public void setPathRinetdConfig(String pathRinetdConfig) {
+    this.pathRinetdConfig = pathRinetdConfig;
+  }
+
   protected Config() {
   }
 

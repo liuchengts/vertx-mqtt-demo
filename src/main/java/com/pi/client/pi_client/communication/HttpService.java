@@ -32,8 +32,13 @@ public class HttpService {
       .putHeader("content-type", "application/json")
       .end(Json.encode(applicationContext.getHandleAction().handle(body.toJsonObject())))));
     router.get("/pac/*").handler(req -> {
-      String fileUrl = config.getPathHome() + config.getPathPacHome() + req.request().path();
+      String fileUrl = config.getPathHome() + req.request().path();
       log.info("fileUrl:{}", fileUrl);
+      if (!new File(fileUrl).exists()) {
+        log.warn("没有此文件");
+        req.response().end("No files");
+        return;
+      }
       try {
         req.response().sendFile(fileUrl);
       } catch (Exception e) {
