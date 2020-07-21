@@ -54,6 +54,10 @@ public class MqttService {
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
+      if (!mqttClient.isConnected()) {
+        log.info("重新创建mqtt客户端实例");
+        client();
+      }
       fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
       if (fag && !getCache().isEmpty()) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
@@ -68,9 +72,6 @@ public class MqttService {
       getCache().add(json);
       log.warn("mqtt 消息发送失败");
     } finally {
-      if (!fag) {
-        client();
-      }
       lock.unlock();
     }
     log.info("当前 mqtt 待发送消息数:" + getCache().size());
