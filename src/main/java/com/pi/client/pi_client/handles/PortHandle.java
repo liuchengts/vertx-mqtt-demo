@@ -45,9 +45,9 @@ public class PortHandle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
+    applicationContext.setPacPort(true);
     HashMap<String, String> map = Json.decodeValue(jsonObject.getString(KeyConstant.DATA), HashMap.class);
     Arrays.stream(map.get(KeyConstant.PORT_OPERATION_ADD).split(",")).forEach(this::addPort);
     Arrays.stream(map.get(KeyConstant.PORT_OPERATION_DEL).split(",")).forEach(this::delPort);
-    applicationContext.setPacPort(true);
   }
 }

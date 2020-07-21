@@ -222,7 +222,10 @@ public class FlowService {
    * 获取额外的需要统计流量的端口
    */
   void getPort() {
-    if (applicationContext.isPacPort()) return;
+    if (applicationContext.isPacPort()) {
+      log.info("已获取端口");
+      return;
+    }
     Boolean fag = mqttService.publish(ResponseDTO.builder()
       .type(ResponseDTO.Type.OK)
       .serviceType(ResponseDTO.ServiceType.PORT)
