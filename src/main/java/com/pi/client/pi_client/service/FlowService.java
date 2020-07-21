@@ -32,11 +32,7 @@ public class FlowService {
     this.mqttService = applicationContext.getMqttService();
     this.kafkaService = applicationContext.getKafkaService();
     this.config = applicationContext.getConfig();
-    if (this.config.getDev()) {
-      log.info("本地模式不启动任务...");
-    } else {
-      new Thread(this::task).start();
-    }
+    new Thread(this::task).start();
   }
 
   /**
