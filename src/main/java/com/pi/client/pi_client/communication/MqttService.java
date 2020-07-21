@@ -55,12 +55,12 @@ public class MqttService {
         getCache().removeAll(cacheLocal);
       } else {
         getCache().add(json);
-        log.warn("mqtt 消息发送不成功，当前缓存待发送消息条数:" + getCache().size());
+        log.warn("mqtt 消息发送不成功");
       }
     } catch (Exception e) {
       fag = false;
       getCache().add(json);
-      log.warn("mqtt 消息发送失败，当前缓存待发送消息条数:" + getCache().size());
+      log.warn("mqtt 消息发送失败");
     } finally {
       lock.unlock();
     }
