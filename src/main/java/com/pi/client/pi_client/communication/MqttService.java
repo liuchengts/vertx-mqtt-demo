@@ -16,6 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 public class MqttService {
+  ApplicationContext applicationContext;
   @Getter
   MqttClient mqttClient;
   Config config;
@@ -24,6 +25,11 @@ public class MqttService {
 
   public MqttService(ApplicationContext applicationContext) {
     this.config = applicationContext.getConfig();
+    this.applicationContext = applicationContext;
+    client();
+  }
+
+  private void client() {
     MqttClientOptions mqttClientOptions = new MqttClientOptions();
     mqttClientOptions.setMaxInflightQueue(9999);
     mqttClient = MqttClient.create(applicationContext.getVertx(), mqttClientOptions);
@@ -44,7 +50,7 @@ public class MqttService {
   }
 
   public Boolean publish(ResponseDTO responseDTO) {
-    Boolean fag;
+    boolean fag = false;
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
@@ -62,6 +68,9 @@ public class MqttService {
       getCache().add(json);
       log.warn("mqtt 消息发送失败");
     } finally {
+      if (!fag) {
+        client();
+      }
       lock.unlock();
     }
     log.info("当前 mqtt 待发送消息数:" + getCache().size());
