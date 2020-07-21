@@ -60,7 +60,7 @@ public class FlowService {
    */
   void addPort() {
     log.info("[脚本执行] 增加端口流量统计");
-    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "12028", "12040")).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "10000", "40000")).start();
   }
 
   void task() {
