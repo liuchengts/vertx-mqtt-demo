@@ -49,10 +49,13 @@ public class MqttService {
     try {
       lock.lock();
       fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
-      if (!getCache().isEmpty()) {
+      if (fag && !getCache().isEmpty()) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
         cacheLocal.forEach(s -> mqttClient.publish(config.getMqttPublish(), Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
         getCache().removeAll(cacheLocal);
+      } else {
+        getCache().add(json);
+        log.warn("mqtt 消息发送不成功，当前缓存待发送消息条数:" + getCache().size());
       }
     } catch (Exception e) {
       fag = false;
