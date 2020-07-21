@@ -7,7 +7,6 @@ import com.pi.client.pi_client.communication.HttpService;
 import com.pi.client.pi_client.communication.MqttService;
 import com.pi.client.pi_client.service.HeartbeatService;
 import io.vertx.core.Vertx;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
