@@ -60,7 +60,7 @@ public class FlowService {
    */
   void addPort() {
     log.info("[脚本执行] 增加端口流量统计");
-    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "10000", "40000")).start();
+    new Thread(() -> ShellUtils.exec(config.getPathShellRoot(), config.getShellFlowAddPort(), "12028", "12100")).start();
   }
 
   void task() {
@@ -68,7 +68,7 @@ public class FlowService {
     new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
       @Override
       public void run() {
-        log.info("定时[" + this.getClass().getName() + "]任务开始执行...");
+        log.info("定时[" + this.getClass().getSimpleName() + "]任务开始执行...");
         Thread checkThread = checkShell();
         checkThread.start();
         try {
