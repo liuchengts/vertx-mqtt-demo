@@ -1,5 +1,6 @@
 package com.pi.client.pi_client;
 
+import com.pi.client.pi_client.communication.SocketService;
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.communication.HttpService;
@@ -74,6 +75,11 @@ public class PiApplication extends AbstractVerticle {
     } catch (Exception e) {
       log.error("HttpService error", e);
     }
+//    try {
+//      applicationContext.setSocketService(new SocketService(applicationContext));
+//    } catch (Exception e) {
+//      log.error("SocketService error", e);
+//    }
     try {
       applicationContext.setFlowService(new FlowService(applicationContext));
     } catch (Exception e) {

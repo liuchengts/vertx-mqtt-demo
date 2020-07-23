@@ -1,6 +1,7 @@
 package com.pi.client.pi_client;
 
 import com.pi.client.pi_client.communication.KafkaService;
+import com.pi.client.pi_client.communication.SocketService;
 import com.pi.client.pi_client.handles.HandleAction;
 import com.pi.client.pi_client.service.FlowService;
 import com.pi.client.pi_client.communication.HttpService;
@@ -31,12 +32,18 @@ public class ApplicationContext {
   @Getter
   HeartbeatService heartbeatService;
   @Getter
+  SocketService socketService;
+  @Getter
   Vertx vertx;
   @Getter
   String id;
   @Getter
   @Setter
   boolean pacPort;
+
+  protected void setSocketService(SocketService socketService) {
+    this.socketService = socketService;
+  }
 
   protected void setKafkaService(KafkaService kafkaService) {
     this.kafkaService = kafkaService;
