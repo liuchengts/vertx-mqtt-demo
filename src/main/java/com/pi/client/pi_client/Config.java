@@ -124,6 +124,12 @@ public class Config {
   private String shellRinetd = "rinetd/rinetd.sh";
 
   /**
+   * forward的配置文件路径
+   * pathShellRoot
+   */
+  private String shellForward = "flow/forward.sh";
+
+  /**
    * pac模板文件路径
    * pathShellRoot
    */
@@ -134,6 +140,10 @@ public class Config {
    * pathShellRoot
    */
   private String shellIp = "ip.sh";
+
+  public String getShellForward() {
+    return shellForward;
+  }
 
   public String getPathPacHome() {
     return pathPacHome;

@@ -48,6 +48,7 @@ public interface KeyConstant {
   String V2 = "V2"; //V2相关
   String SHELL_PULL = "SHELL_PULL"; //更新脚本
   String RINETD = "RINETD"; //转发
+  String FORWARD = "FORWARD"; //转发2
   String PAC_FILE = "PAC_FILE"; //pac文件操作
   String PORT = "PORT"; //端口统计
 }

@@ -20,6 +20,7 @@ public class HandleAction {
   RinetdHandle rinetdHandle;
   PacHandle pacHandle;
   PortHandle portHandle;
+  ForwardHandle forwardHandle;
 
   public HandleAction(ApplicationContext applicationContext) throws Exception {
     this.applicationContext = applicationContext;
@@ -29,6 +30,7 @@ public class HandleAction {
     rinetdHandle = new RinetdHandle(applicationContext);
     pacHandle = new PacHandle(applicationContext);
     portHandle = new PortHandle(applicationContext);
+    forwardHandle = new ForwardHandle(applicationContext);
   }
 
   public void close() {
@@ -75,6 +77,8 @@ public class HandleAction {
       pacHandle.handle(jsonObject);
     } else if (KeyConstant.PORT.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
       portHandle.handle(jsonObject);
+    } else if (KeyConstant.FORWARD.equals(jsonObject.getString(KeyConstant.SERVICE_TYPE))) {
+      forwardHandle.handle(jsonObject);
     } else {
       responseDTO.setType(ResponseDTO.Type.OK);
       responseDTO.setMsg("未知的请求类型");
