@@ -33,7 +33,7 @@ public class HeartbeatService {
     new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
       @Override
       public void run() {
-        log.info("定时[" + this.getClass().getSimpleName() + "]任务开始执行...");
+        log.info("定时[" + HeartbeatService.class.getSimpleName() + "]任务开始执行...");
         Boolean fag = mqttService.publish(ResponseDTO.builder()
           .type(ResponseDTO.Type.OK)
           .serviceType(ResponseDTO.ServiceType.HEARTBEAT)

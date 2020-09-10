@@ -64,7 +64,7 @@ public class FlowService {
     new Timer(System.currentTimeMillis() + "").schedule(new TimerTask() {
       @Override
       public void run() {
-        log.info("定时[" + this.getClass().getSimpleName() + "]任务开始执行...");
+        log.info("定时[" + FlowService.class.getSimpleName() + "]任务开始执行...");
         Thread checkThread = checkShell();
         checkThread.start();
         try {
