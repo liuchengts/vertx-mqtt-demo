@@ -59,7 +59,7 @@ public class MqttService {
         client();
       }
       fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
-      if (fag && !getCache().isEmpty()) {
+      if (fag) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
         cacheLocal.forEach(s -> mqttClient.publish(config.getMqttPublish(), Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
         getCache().removeAll(cacheLocal);
