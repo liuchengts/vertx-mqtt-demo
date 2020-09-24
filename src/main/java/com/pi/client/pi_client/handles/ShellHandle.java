@@ -53,6 +53,7 @@ public class ShellHandle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
+    log.info("shell handle");
     try {
       updateShell();
     } catch (Exception e) {

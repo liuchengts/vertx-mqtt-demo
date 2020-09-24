@@ -55,6 +55,7 @@ public class ForwardHandle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
+    log.info("forward handle");
     String dataJson = jsonObject.getString(KeyConstant.DATA);
     try {
       JacksonCodec.decodeValue(dataJson, new TypeReference<List<ForwardDTO>>() {

@@ -35,6 +35,7 @@ public class RinetdHandle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
+    log.info("rinetd handle");
     String data = jsonObject.getString(KeyConstant.DATA);
     try {
       FileUtils.outFile(config.getPathRinetdConfig() + config.getConfigTmp(), data);

@@ -25,6 +25,7 @@ public class PacHandle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
+    log.info("pac handle");
     String pacConfigHome = config.getPathHome() + config.getPathPacHome();
     JsonObject dataJson = jsonObject.getJsonObject(KeyConstant.DATA);
     if (dataJson.getBoolean(KeyConstant.PAC_DEL)) {

@@ -45,6 +45,7 @@ public class HandleAction {
    * @return 出参
    */
   public ResponseDTO<Object> handle(JsonObject jsonObject) {
+    log.info("default handle");
     ResponseDTO<Object> responseDTO = new ResponseDTO<>();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");

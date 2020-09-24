@@ -32,6 +32,7 @@ public class V2Handle {
    * @param jsonObject 入参
    */
   public void handle(JsonObject jsonObject) {
+    log.info("v2 handle");
     String data = jsonObject.getString(KeyConstant.DATA);
     try {
       FileUtils.outFile(config.getPathV2rayConfig() + config.getConfigTmp(), data);

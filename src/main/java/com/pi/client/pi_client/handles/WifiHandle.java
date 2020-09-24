@@ -38,6 +38,7 @@ public class WifiHandle {
    * @return 出参
    */
   public ResponseDTO<Object> handle(JsonObject jsonObject) {
+    log.info("wifi handle");
     ResponseDTO<Object> responseDTO = new ResponseDTO<>();
     responseDTO.setType(ResponseDTO.Type.OK);
     responseDTO.setMsg("");
