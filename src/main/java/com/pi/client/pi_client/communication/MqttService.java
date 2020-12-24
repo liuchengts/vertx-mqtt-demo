@@ -41,8 +41,7 @@ public class MqttService {
         log.error("Failed to connect to a server");
         log.error("error", c.cause());
       }
-    })
-      .publishHandler(pub -> {
+    }).publishHandler(pub -> {
         Buffer buffer = pub.payload();
         log.info("Content(as string) of the message: " + buffer.toString());
         applicationContext.getHandleAction().handle(buffer.toJsonObject());
