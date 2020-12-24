@@ -31,6 +31,7 @@ public class MqttService {
 
   private void client() {
     MqttClientOptions mqttClientOptions = new MqttClientOptions();
+    mqttClientOptions.setMaxInflightQueue(9999);
     mqttClient = MqttClient.create(applicationContext.getVertx(), mqttClientOptions);
     mqttClient.connect(config.getMqttPort(), config.getMqttIp(), c -> {
       if (c.succeeded()) {
@@ -53,10 +54,10 @@ public class MqttService {
     String json = Json.encode(responseDTO);
     try {
       lock.lock();
-//      if (!mqttClient.isConnected()) {
-//       log.info("重新创建mqtt客户端实例");
-//       client();
-//      }
+      if (!mqttClient.isConnected()) {
+       log.info("重新创建mqtt客户端实例");
+       client();
+      }
       fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
       if (fag) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
