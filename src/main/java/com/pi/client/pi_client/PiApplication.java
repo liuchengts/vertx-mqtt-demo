@@ -48,7 +48,7 @@ public class PiApplication extends AbstractVerticle {
       config.setPathShellRoot("/Users/liucheng/it/lc/shell-deployment/");
       config.setPathHome("/Users/liucheng/it/lc/");
       config.setPathRinetdConfig("/Users/liucheng/it/lc/rinetd.conf");
-//      config.setMqttIp("localhost");
+      config.setMqttIp("localhost");
     }
     applicationContext.setVertx(vertx);
     applicationContext.setConfig(config);

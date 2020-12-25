@@ -58,7 +58,7 @@ public class MqttService {
       lock.lock();
       if (!mqttClient.isConnected()) {
         log.info("重新创建mqtt客户端实例");
-//       client();
+        client();
       }
       fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).succeeded();
       if (fag) {
