@@ -60,7 +60,7 @@ public class MqttService {
         log.info("重新创建mqtt客户端实例");
         client();
       }
-      fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).succeeded();
+      fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
       if (fag) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
         cacheLocal.forEach(s -> mqttClient.publish(config.getMqttPublish(), Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false));

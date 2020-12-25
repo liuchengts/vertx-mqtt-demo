@@ -36,8 +36,8 @@ public class HttpService {
       .putHeader("content-type", "application/json")
       .end("ok"));
     router.post("/mqtt").handler(req -> {
-        req.request().body(body -> {
-          handle(body.result());
+        req.request().bodyHandler(body -> {
+          handle(body);
           req.response()
             .putHeader("content-type", "application/json")
             .end(Json.encode("ok"));
@@ -71,7 +71,7 @@ public class HttpService {
   }
 
   void handle(Buffer body) {
-    String str = body.toString().replaceAll("\"","");
+    String str = body.toString().replaceAll("\"", "");
     String json = null;
     try {
       json = new String(Base64.getDecoder().decode(str), "utf-8");
