@@ -28,7 +28,7 @@ public class HttpService {
     router.get("/index").handler(req -> req.response()
       .putHeader("content-type", "application/json")
       .end("ok"));
-    router.post("/post").handler(req -> req.request().bodyHandler(body -> req.response()
+    router.post("/mqtt").handler(req -> req.request().bodyHandler(body -> req.response()
       .putHeader("content-type", "application/json")
       .end(Json.encode(applicationContext.getHandleAction().handle(body.toJsonObject())))));
     router.get("/pac/*").handler(req -> {

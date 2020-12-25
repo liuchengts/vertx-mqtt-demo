@@ -6,6 +6,7 @@ import com.pi.client.pi_client.model.ResponseDTO;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mqtt.MqttClient;
 import io.vertx.mqtt.MqttClientOptions;
 import lombok.Getter;
@@ -31,17 +32,19 @@ public class MqttService {
 
   private void client() {
     MqttClientOptions mqttClientOptions = new MqttClientOptions();
-    mqttClientOptions.setMaxInflightQueue(9999);
+//    mqttClientOptions.setMaxInflightQueue(9999);
+    mqttClientOptions.setAutoKeepAlive(true);
     mqttClient = MqttClient.create(applicationContext.getVertx(), mqttClientOptions);
     mqttClient.connect(config.getMqttPort(), config.getMqttIp(), c -> {
       if (c.succeeded()) {
+        mqttClient.subscribe(config.getMqttSubscribe(), 2);
         log.info("Connected to a server");
-        mqttClient.subscribe(config.getMqttSubscribe(), MqttQoS.AT_LEAST_ONCE.value());
       } else {
         log.error("Failed to connect to a server");
         log.error("error", c.cause());
       }
-    }).publishHandler(pub -> {
+    })
+      .publishHandler(pub -> {
         Buffer buffer = pub.payload();
         log.info("Content(as string) of the message: " + buffer.toString());
         applicationContext.getHandleAction().handle(buffer.toJsonObject());
@@ -54,13 +57,13 @@ public class MqttService {
     try {
       lock.lock();
       if (!mqttClient.isConnected()) {
-       log.info("重新创建mqtt客户端实例");
-       client();
+        log.info("重新创建mqtt客户端实例");
+//       client();
       }
-      fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).isConnected();
+      fag = mqttClient.publish(config.getMqttPublish(), Buffer.buffer(json), MqttQoS.AT_LEAST_ONCE, false, false).succeeded();
       if (fag) {
         LinkedList<String> cacheLocal = new LinkedList<>(getCache());
-        cacheLocal.forEach(s -> mqttClient.publish(config.getMqttPublish(), Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false).clientId());
+        cacheLocal.forEach(s -> mqttClient.publish(config.getMqttPublish(), Buffer.buffer(s), MqttQoS.AT_LEAST_ONCE, false, false));
         getCache().removeAll(cacheLocal);
       } else {
         getCache().add(json);
