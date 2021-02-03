@@ -56,20 +56,40 @@ public class ForwardHandle {
    */
   public void handle(JsonObject jsonObject) {
     log.info("forward handle");
-    String dataJson = jsonObject.getString(KeyConstant.DATA);
     try {
-      JacksonCodec.decodeValue(dataJson, new TypeReference<List<ForwardDTO>>() {
-      }).forEach(dto -> {
-        if (StringUtil.isNullOrEmpty(dto.getForward())
-          || null == dto.getPortA() || null == dto.getPortB()) return;
-        if ("add".equals(dto.getForward())) {
-          addShell(dto.getPortA().toString(), dto.getPortB().toString());
-        } else if ("del".equals(dto.getForward())) {
-          delShell(dto.getPortA().toString(), dto.getPortB().toString());
-        } else {
-          log.warn("无法解析的转发规则:{}", dto);
-        }
-      });
+      jsonObject.getJsonObject(KeyConstant.DATA)
+        .stream()
+        .map(d -> {
+          ForwardDTO dto = new ForwardDTO();
+          if (d.getKey().contains("portA")) dto.setPortA(Long.valueOf(d.getValue().toString()));
+          else if (d.getKey().contains("portB")) dto.setPortB(Long.valueOf(d.getValue().toString()));
+          else if (d.getKey().contains("forward")) dto.setForward(d.getValue().toString());
+          return dto;
+        })
+        .forEach(dto -> {
+          if (StringUtil.isNullOrEmpty(dto.getForward())
+            || null == dto.getPortA() || null == dto.getPortB()) return;
+          if ("add".equals(dto.getForward())) {
+            addShell(dto.getPortA().toString(), dto.getPortB().toString());
+          } else if ("del".equals(dto.getForward())) {
+            delShell(dto.getPortA().toString(), dto.getPortB().toString());
+          } else {
+            log.warn("无法解析的转发规则:{}", dto);
+          }
+        });
+//      String dataJson = jsonObject.getString(KeyConstant.DATA);
+//      JacksonCodec.decodeValue(dataJson, new TypeReference<List<ForwardDTO>>() {
+//      }).forEach(dto -> {
+//        if (StringUtil.isNullOrEmpty(dto.getForward())
+//          || null == dto.getPortA() || null == dto.getPortB()) return;
+//        if ("add".equals(dto.getForward())) {
+//          addShell(dto.getPortA().toString(), dto.getPortB().toString());
+//        } else if ("del".equals(dto.getForward())) {
+//          delShell(dto.getPortA().toString(), dto.getPortB().toString());
+//        } else {
+//          log.warn("无法解析的转发规则:{}", dto);
+//        }
+//      });
     } catch (Exception e) {
       log.error("指令处理失败", e);
     }
