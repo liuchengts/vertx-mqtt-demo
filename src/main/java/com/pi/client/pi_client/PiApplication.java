@@ -18,6 +18,7 @@ public class PiApplication extends AbstractVerticle {
   public static void main(String[] args) {
     dev = true;
     Vertx.vertx().deployVerticle(PiApplication.class.getName());
+    log.info(" JVM running for ok");
   }
 
   @Override
@@ -29,6 +30,8 @@ public class PiApplication extends AbstractVerticle {
     } catch (Exception e) {
       log.error("启动异常", e);
     }
+
+    log.info(" JVM running for ok");
   }
 
   @Override
