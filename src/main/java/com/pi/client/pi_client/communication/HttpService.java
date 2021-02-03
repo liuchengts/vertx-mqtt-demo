@@ -44,7 +44,7 @@ public class HttpService {
         });
       }
     );
-    router.get("/pac/*").handler(req -> {
+    router.get("/pac*").handler(req -> {
       String fileUrl = config.getPathHome() + req.request().path();
       log.info("fileUrl:{}", fileUrl);
       if (!new File(fileUrl).exists()) {
