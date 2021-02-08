@@ -1,4 +1,4 @@
-package com.pi.client.pi_client;
+package com.pi.client;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
@@ -20,8 +20,10 @@ public class MonitorApplication extends AbstractVerticle {
   static boolean dev = false;
   static Vertx vertx;
   static MqttClient mqttClient;
+  //todo 此处填上自己的 mqtt port
   static final Integer MQTT_PORT = 1883;
-  static final String MQTT_IP = "mqtt.ayouran.com";
+  //todo 此处填上自己的 mqtt ip
+  static final String MQTT_IP = "localhost";
   static final String MQTT_SUBSCRIBE = "test-mqtt";
   static final String MQTT_PUBLISH = "test-mqtt";
 
@@ -49,7 +51,7 @@ public class MonitorApplication extends AbstractVerticle {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-   //todo 这里增减发送内容会出现不一样的情况，请在此处尝试
+   //todo 这里增减发送内容会出现不一样的情况，请在此处尝试； 当前 发送消息长度 8388 消息订阅端收不到内容，减少至6000 即可正常收到
     publish("@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
       "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
       "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
@@ -129,7 +131,6 @@ public class MonitorApplication extends AbstractVerticle {
 
   public Boolean publish(String json) {
     log.info("发送的 msg消息长度 :{} ", json.length());
-    log.info("发送的 msg消息字节 :{} ", json.getBytes().length);
     boolean fag;
     try {
       lock.lock();

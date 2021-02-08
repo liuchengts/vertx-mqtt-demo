@@ -19,7 +19,7 @@
     <vertx.version>3.8.5</vertx.version>
 <!--    <vertx.version>4.0.0</vertx.version>-->
 <!--    <vertx.version>4.0.1-SNAPSHOT</vertx.version>-->
-    <main.verticle>com.pi.client.pi_client.PiApplication</main.verticle>
+    <main.verticle>com.pi.client.MonitorApplication</main.verticle>
   </properties>
 
   <dependencies>
