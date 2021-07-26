@@ -23,7 +23,7 @@ public class MonitorApplication extends AbstractVerticle {
   //todo 此处填上自己的 mqtt port
   static final Integer MQTT_PORT = 1883;
   //todo 此处填上自己的 mqtt ip
-  static final String MQTT_IP = "localhost";
+  static final String MQTT_IP = "mqtt.ayouran.com";
   static final String MQTT_SUBSCRIBE = "test-mqtt";
   static final String MQTT_PUBLISH = "test-mqtt";
 
@@ -44,51 +44,56 @@ public class MonitorApplication extends AbstractVerticle {
       log.error("启动异常", e);
     }
     log.info(" JVM running for ok");
+    new Thread(this::task).start();
+  }
 
-    //test  发送大量字节
-    try {
-      Thread.sleep(3000l);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+  void task() {
+    log.info(" task 启动...");
+    while (true) {
+      //test  发送大量字节
+      try {
+        Thread.sleep(1000l);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      //todo 这里增减发送内容会出现不一样的情况，请在此处尝试； 当前 发送消息长度 8388 消息订阅端收不到内容，减少至6000 即可正常收到
+      publish("@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
+        "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x");
     }
-   //todo 这里增减发送内容会出现不一样的情况，请在此处尝试； 当前 发送消息长度 8388 消息订阅端收不到内容，减少至6000 即可正常收到
-    publish("@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x" +
-      "@The Vert.x core APIs contain the backbone for writing Vert.x applications and low-level support for HTTP, TCP, UDP, file system, asynchronous streams and many other building blocks. It is also used by many other components of Vert.x");
-
   }
 
   @Override
@@ -106,6 +111,7 @@ public class MonitorApplication extends AbstractVerticle {
       MqttClientOptions mqttClientOptions = new MqttClientOptions();
 //    mqttClientOptions.setMaxInflightQueue(9999);
       mqttClientOptions.setAutoKeepAlive(true);
+      mqttClientOptions.setMaxMessageSize(268435455);
       mqttClient = MqttClient.create(vertx, mqttClientOptions);
       mqttClient.connect(MQTT_PORT, MQTT_IP, c -> {
         if (c.succeeded()) {
