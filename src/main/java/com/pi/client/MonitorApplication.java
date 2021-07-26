@@ -23,7 +23,7 @@ public class MonitorApplication extends AbstractVerticle {
   //todo 此处填上自己的 mqtt port
   static final Integer MQTT_PORT = 1883;
   //todo 此处填上自己的 mqtt ip
-  static final String MQTT_IP = "mqtt.ayouran.com";
+  static final String MQTT_IP = "localhost";
   static final String MQTT_SUBSCRIBE = "test-mqtt";
   static final String MQTT_PUBLISH = "test-mqtt";
 
